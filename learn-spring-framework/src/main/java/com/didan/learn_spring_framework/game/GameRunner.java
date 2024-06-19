@@ -1,19 +1,18 @@
 package com.didan.learn_spring_framework.game;
 
 public class GameRunner {
-//	private MarioGame marioGame;
-	private SuperContraGame superContraGame;
-	public GameRunner(SuperContraGame superContraGame) {
-		this.superContraGame = superContraGame;
+	private GameConsole game;
+	public GameRunner(GameConsole game) {
+		this.game = game;
 	}
 	
 	public void run() {
-		System.out.println("Game Running " + superContraGame);
+		System.out.println("Game Running " + game);
 		
-		superContraGame.up();
-		superContraGame.down();
-		superContraGame.left();
-		superContraGame.right();
+		game.up();
+		game.down();
+		game.left();
+		game.right();
 	}
 
 }
