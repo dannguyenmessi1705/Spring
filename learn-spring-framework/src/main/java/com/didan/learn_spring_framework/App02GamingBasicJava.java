@@ -16,6 +16,9 @@ public class App02GamingBasicJava {
 		// getName() trả về tên của bean, nếu không được chỉ định thì nó sẽ là tên của
 		// method trả về bean.
 		System.out.println(app.getBean("name"));
+		System.out.println(app.getBean("person"));
+		System.out.println(app.getBean("address"));
+		
 
 	}
 
