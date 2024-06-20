@@ -17,8 +17,10 @@ public class App02GamingBasicJava {
 		// method trả về bean.
 		System.out.println(app.getBean("name"));
 		System.out.println(app.getBean("person"));
-		System.out.println(app.getBean("address"));
-		
+		System.out.println(app.getBean("address2"));
+		System.out.println(app.getBean("person2"));
+		System.out.println(app.getBean(Address.class)); // Lấy tất cả các bean có kiểu là Address, nếu có nhiều hơn 1
+														// bean thì sẽ báo lỗi vì không biết lấy bean nào.
 
 	}
 
