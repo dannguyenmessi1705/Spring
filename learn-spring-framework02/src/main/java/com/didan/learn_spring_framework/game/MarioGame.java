@@ -1,5 +1,10 @@
 package com.didan.learn_spring_framework.game;
 
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
+
+@Component
+@Primary // Annotation đánh dấu đây là Bean mặc định khi có nhiều Bean cùng loại
 public class MarioGame implements GameConsole{
 	public void up () {
 		System.out.println("Jump");
