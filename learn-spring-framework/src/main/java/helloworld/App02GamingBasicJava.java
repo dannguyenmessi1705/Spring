@@ -1,4 +1,4 @@
-package com.didan.learn_spring_framework;
+package helloworld;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
