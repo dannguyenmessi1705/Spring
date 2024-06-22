@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class CourseControllers {
 	@RequestMapping("/courses")
 	public List<Course> getAllCourses() {
-		return Arrays.asList(new Course(1, "SpringBoot", "didan"), new Course(2, "NextJS", "didan"));
+		return Arrays.asList(new Course(1, "SpringBoot", "didan"), 
+				new Course(2, "NextJS", "didan"),
+				new Course(3, "NestJS", "didan")
+				);
 	}
 }
