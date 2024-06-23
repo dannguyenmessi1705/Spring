@@ -1,6 +1,7 @@
 package com.didan.learn_jpa_and_hibernate.course.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -33,6 +34,10 @@ public class CourseJdbc {
 			DELETE FROM courses WHERE id = ?;
 			""";
 
+	public static String QUERY_TEMPLATE = """
+			SELECT * FROM courses WHERE id = ?;
+			""";
+	
 	public void insert() {
 		jdbcTemplate.update(INSERT_SQL); // Thực thi câu lệnh SQL INSERT_SQL bằng jdbcTemplate
 	}
@@ -49,5 +54,9 @@ public class CourseJdbc {
 	public void deleteId(long id) {
 		jdbcTemplate.update(DELETE_TEMPLATE, id); // Thực thi câu lệnh SQL DELETE_TEMPLATE bằng jdbcTemplate với các
 													// tham số động
+	}
+	
+	public Course getCourse(long id) {
+		return jdbcTemplate.queryForObject(QUERY_TEMPLATE, new BeanPropertyRowMapper<>(Course.class), id);
 	}
 }

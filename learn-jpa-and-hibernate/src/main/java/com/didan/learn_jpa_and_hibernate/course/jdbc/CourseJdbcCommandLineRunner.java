@@ -21,6 +21,8 @@ public class CourseJdbcCommandLineRunner implements CommandLineRunner { // Comma
 		courseJdbc.insertTemplate(new Course(2, "NextJs", "didan"));
 		courseJdbc.insertTemplate(new Course(3, "Python", "didan"));
 		courseJdbc.deleteId(1);
+		
+		System.out.println(courseJdbc.getCourse(2));
 	}
 
 }
