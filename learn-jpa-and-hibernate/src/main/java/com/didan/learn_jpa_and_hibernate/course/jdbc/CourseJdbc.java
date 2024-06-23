@@ -37,7 +37,7 @@ public class CourseJdbc {
 	public static String QUERY_TEMPLATE = """
 			SELECT * FROM courses WHERE id = ?;
 			""";
-	
+
 	public void insert() {
 		jdbcTemplate.update(INSERT_SQL); // Thực thi câu lệnh SQL INSERT_SQL bằng jdbcTemplate
 	}
@@ -55,8 +55,20 @@ public class CourseJdbc {
 		jdbcTemplate.update(DELETE_TEMPLATE, id); // Thực thi câu lệnh SQL DELETE_TEMPLATE bằng jdbcTemplate với các
 													// tham số động
 	}
-	
+
 	public Course getCourse(long id) {
-		return jdbcTemplate.queryForObject(QUERY_TEMPLATE, new BeanPropertyRowMapper<>(Course.class), id);
+		// Thực thi câu lệnh SQL QUERY_TEMPLATE bằng jdbcTemplate với các tham số động
+		return jdbcTemplate.queryForObject(QUERY_TEMPLATE, new BeanPropertyRowMapper<>(Course.class), id); // Dùng
+																											// BeanPropertyRowMapper
+																											// để ánh xạ
+																											// các cột
+																											// trong
+																											// bảng
+																											// courses
+																											// với các
+																											// trường
+																											// của
+																											// class
+																											// Course
 	}
 }
