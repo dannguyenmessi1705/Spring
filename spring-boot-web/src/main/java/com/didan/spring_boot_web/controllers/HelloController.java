@@ -24,4 +24,10 @@ public class HelloController {
 
 		return html.toString(); // Trả về chuỗi HTML cho client
 	}
+
+	@RequestMapping("/hello-jsp") // Đánh dấu phương thức này sẽ xử lý request từ client với URL là /hello-jsp
+	public String helloJsp() {
+		return "helloWorld"; // Trả về tên của file JSP mà bạn muốn hiển thị (= spring.mvc.view.prefix +
+								// "helloWorld" + spring.mvc.view.suffix = /WEB-INF/views/helloWorld.jsp)
+	}
 }
