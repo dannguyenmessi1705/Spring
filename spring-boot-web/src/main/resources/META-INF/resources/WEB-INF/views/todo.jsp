@@ -2,15 +2,13 @@
 <html>
 	<head>		
 		<link href="webjars/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet" />
-		<title>Login page</title>
+		<title>Add Todo page</title>
 	</head>
 	<body>
 		<div class="container">		
-			<h1>Welcome to login page </h1>
-			<pre>${authError}</pre>
+			<h1>Add Todo</h1>
 			<form method="POST">
-				Name: <input type="text" placeholder="username" name="username"/>
-				Password: <input tpye="password" placeholder="password" name="password"/>
+				Description: <input type="text" placeholder="description" name="description" required/>
 				<input type="submit" />
 			</form>
 		</div>

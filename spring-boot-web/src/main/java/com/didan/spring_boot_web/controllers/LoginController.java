@@ -35,7 +35,8 @@ public class LoginController {
 		// ModelMap để truyền dữ liệu từ Controller sang View, từ View: hiển thị dữ liệu
 		// bằng ${key} (key là tên của biến truyền từ Controller)
 		if (loginService.checkLogin(username, password)) {
-			model.put("username", username);
+			model.put("username", username); // Lưu thông tin vào model render View, đồng thời lưu username vào Session
+												// vì đã có @SesionAttributes("username") ở trên
 			return "welcome";
 		} else {
 			model.put("authError", "Incorrect username or password");
