@@ -14,6 +14,7 @@
 						<th>Description</th>
 						<th>Date</th>
 						<th>Is Done?</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -23,11 +24,12 @@
 							<td>${todo.description}</td>
 							<td>${todo.date}</td>
 							<td>${todo.done}</td>
+							<td><a href="delete-todo?id=${todo.id}" class="btn btn-warning">Delete</a></td> <!-- Thêm link để xóa todo -->
 						</tr>
 					</c:forEach>
 				</tbody>
 			</table>
-			<a href="add-todo" class="btn btn-success">Add Todo</a>
+			<a href="add-todo" class="btn btn-success">Add Todo</a> 
 		</div>
 		
 		<script src="webjars/bootstrap/5.3.3/js/bootstrap.min.js"/>

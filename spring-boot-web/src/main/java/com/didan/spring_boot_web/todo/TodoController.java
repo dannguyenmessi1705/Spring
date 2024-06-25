@@ -54,5 +54,11 @@ public class TodoController {
 		todoService.addTodo(username, todo.getDescription(), LocalDate.now().plusYears(1), false);
 		return "redirect:list-todos"; // Chuyển hướng sang URL /list-todos
 	}
+	
+	@RequestMapping("delete-todo") // Xử lý request GET từ client với URL là /delete-todo
+	public String deleteTodo(@RequestParam("id") int id) { // Lấy tham số id từ URL
+		todoService.deleteTodo(id); // Xóa Todo theo id
+		return "redirect:list-todos"; // Chuyển hướng sang URL /list-todos
+	}
 
 }
