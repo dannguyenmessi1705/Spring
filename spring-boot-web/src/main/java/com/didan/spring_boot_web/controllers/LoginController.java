@@ -7,10 +7,13 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.didan.spring_boot_web.services.LoginService;
 
 @Controller
+@SessionAttributes("username") // Lưu trữ thông tin username vào Session để sử dụng ở các request khác, khi có
+								// ModelMap put vào key "username"
 public class LoginController {
 	private final Logger logger = LoggerFactory.getLogger(getClass()); // Sử dụng Logger để ghi log, lấy thông tin
 																		// của class hiện tại
