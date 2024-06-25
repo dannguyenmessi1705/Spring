@@ -4,24 +4,40 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.didan.spring_boot_web.services.LoginService;
 
 @Controller
 public class LoginController {
 	private final Logger logger = LoggerFactory.getLogger(getClass()); // Sử dụng Logger để ghi log, lấy thông tin
 																		// của class hiện tại
+	private final LoginService loginService; // Inject một Bean vào Controller từ Service
 
-	@RequestMapping("/login")
-	public String loginPage(@RequestParam("name") String name, ModelMap model) {
-		if (StringUtils.hasText(name)) {
-			model.put("name", name); // Truyền dữ liệu từ Controller sang View thông qua ModelMap, với key là "name"
-										// và value là name, sau đó file JSP có thể sử dụng được dữ liệu này bằng cú
-										// pháp ${name}
-		}
-		logger.debug("Query is {}", name); // Ghi log với level DEBUG, in ra giá trị của name, DEGUB: Query is <name>
+	public LoginController(LoginService loginService) {
+		super();
+		this.loginService = loginService;
+	}
+
+	@RequestMapping(value = "login", method = RequestMethod.GET) // Xử lý request GET từ client với URL là /login
+	public String loginPage() {
 		return "login";
+	}
+
+	@RequestMapping(value = "login", method = RequestMethod.POST) // Xử lý request POST từ client với URL là /login
+	public String postLogin(@RequestParam("username") String username, @RequestParam("password") String password,
+			ModelMap model) { // RequestParam để lấy dữ liệu từ form gửi lên, hoặc từ query parameter
+		// ModelMap để truyền dữ liệu từ Controller sang View, từ View: hiển thị dữ liệu
+		// bằng ${key} (key là tên của biến truyền từ Controller)
+		if (loginService.checkLogin(username, password)) {
+			model.put("username", username);
+			return "welcome";
+		} else {
+			model.put("authError", "Incorrect username or password");
+			return "login";
+		}
 	}
 
 }
