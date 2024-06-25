@@ -1,4 +1,3 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>   <!-- Thêm taglib để sử dụng form validation -->
 <html>
 	<head>		
@@ -7,6 +6,7 @@
 		<title>Add Todo page</title>
 	</head>
 	<body>
+		<%@ include file="common/navigation.jspf" %>
 		<div class="container">		
 			<h1>Add Todo</h1>
 			<form:form method="POST" modelAttribute="todo"> <!-- Thêm modelAttribute để binding dữ liệu từ form vào object todo -->
