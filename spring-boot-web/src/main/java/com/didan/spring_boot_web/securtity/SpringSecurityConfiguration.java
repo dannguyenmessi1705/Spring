@@ -31,12 +31,18 @@ public class SpringSecurityConfiguration {
 																										// để mã hóa
 																										// mật khẩu
 
-		UserDetails userDetails = User.builder().passwordEncoder(passwordEncoderFunction).username("didannguyen")
+		UserDetails userDetails1 = User.builder().passwordEncoder(passwordEncoderFunction).username("didannguyen")
 				.password("12345").roles("ADMIN", "USER").build(); // Tạo ra một đối tượng UserDetails với việc được mã
 																	// hóa mật khẩu, username là didannguyen, 
 																	// password là 12345, và có 2 role là
 																	// ADMIN và USER
-		return new InMemoryUserDetailsManager(userDetails); // Trả về một đối tượng InMemoryUserDetailsManager với
+		
+		UserDetails userDetails2 = User.builder().passwordEncoder(passwordEncoderFunction).username("lionelmessi")
+				.password("12345").roles("ADMIN", "USER").build(); // Tạo ra một đối tượng UserDetails với việc được mã
+																	// hóa mật khẩu, username là didannguyen, 
+																	// password là 12345, và có 2 role là
+																	// ADMIN và USER
+		return new InMemoryUserDetailsManager(userDetails1, userDetails2); // Trả về một đối tượng InMemoryUserDetailsManager với
 															// user vừa tạo
 	}
 }
