@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -31,8 +32,12 @@ public class UserResource {
 	}
 
 	@GetMapping(path = "{id}") // Tạo path cho method này là /users/{id}
-	public User getUser(@PathVariable("id") int id) { // Trả về user có id trùng với id truyền vào
-		return userDAOService.findById(id); // Gọi method findById() từ UserDAOService
+	public ResponseEntity<? super User> getUser(@PathVariable("id") int id) { // Trả về user có id trùng với id truyền vào
+		User user = userDAOService.findById(id); // Gọi method findById() từ UserDAOService
+		if (user == null) { // Nếu không tìm thấy user thì ném ra exception UserNotFound
+			throw new UserNotFound("User not found with id: " + id);
+		}
+		return new ResponseEntity<>(user, HttpStatus.OK); // Gọi method findById() từ UserDAOService
 	}
 
 	@PostMapping(path = "") // Tạo path cho method này là /users
