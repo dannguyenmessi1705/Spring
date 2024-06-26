@@ -2,16 +2,26 @@ package com.didan.spring_boot_web.todo;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Size;
 
+@Entity
 public class Todo {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // Tự động tăng
 	private int id;
+	
 	private String username;
 
 	@Size(min = 5, message = "The description least at 5 charactors") // Kiểm tra dữ liệu nhập vào, nếu không đúng thì
 																		// trả về message
 	private String description;
+	
 	private LocalDate date;
+	
 	private boolean done;
 
 	public Todo() {
