@@ -15,21 +15,23 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import jakarta.validation.Valid;
 
-//@Controller
+@Controller
 @SessionAttributes("username") // Lưu trữ thông tin username vào Session để sử dụng ở các request khác, khi có ModelMap put vào key "username"
-public class TodoController {
+public class TodoControllerJPA {
 	private final TodoService todoService; // Inject một Bean vào Controller từ Service
+	private final TodoRepository todoRepository;
 
-	public TodoController(TodoService todoService) {
+	public TodoControllerJPA(TodoService todoService, TodoRepository todoRepository) {
 		super();
 		this.todoService = todoService;
+		this.todoRepository = todoRepository;
 	}
 
 	@RequestMapping(value = "list-todos", method = RequestMethod.GET) // Xử lý request GET từ client với URL là
 																		// /list-todos
 	public String getListTodosByUsername(ModelMap model) {
 		String username = getUsernameInSecurity(model); // Lấy thông tin username từ SecurityContextHolder sau khi đăng nhập
-		List<Todo> todos = todoService.getTodosByUsername(username); // Lấy danh sách Todo theo username
+		List<Todo> todos = todoRepository.findByUsername(username); // Lấy danh sách Todo theo username
 		model.addAttribute("todos", todos); // Truyền danh sách Todo sang View để hiển thị lên giao diện
 		return "listTodos"; // Trả về tên của file JSP mà bạn muốn hiển thị (= spring.mvc.view.prefix +
 							// "listTodos" + spring.mvc.view.suffix = /WEB-INF/views/listTodos.jsp)
@@ -56,19 +58,20 @@ public class TodoController {
 		String username = (String) model.get("username"); // Lấy thông tin username từ Session, đã được lưu ở
 															// LoginController khi đăng nhập thành công, nếu không có
 															// đăng nhập thì sẽ trả về null
-		todoService.addTodo(username, todo.getDescription(), todo.getDate(), false);
+		todo.setUsername(username); // Cập nhật username cho Todo
+		todoRepository.save(todo);
 		return "redirect:list-todos"; // Chuyển hướng sang URL /list-todos
 	}
 
 	@RequestMapping("delete-todo") // Xử lý request GET từ client với URL là /delete-todo
 	public String deleteTodo(@RequestParam("id") int id) { // Lấy tham số id từ URL
-		todoService.deleteTodo(id); // Xóa Todo theo id
+		todoRepository.deleteById(id);
 		return "redirect:list-todos"; // Chuyển hướng sang URL /list-todos
 	}
 
 	@RequestMapping(value = "update-todo", method = RequestMethod.GET)
 	public String getUpdateTodoPage(@RequestParam("id") int id, ModelMap model) {
-		Todo todo = todoService.findById(id); // Tìm Todo theo id
+		Todo todo = todoRepository.findFirstById(id); // Tìm Todo theo id
 		model.put("todo", todo); // Truyền Todo sang View để hiển thị lên giao diện
 		return "todo"; // Trả về tên của file JSP mà bạn muốn hiển thị (= spring.mvc.view.prefix +
 						// "todo" +
@@ -89,7 +92,7 @@ public class TodoController {
 															// LoginController khi đăng nhập thành công, nếu không có
 															// đăng nhập thì sẽ trả về null
 		todo.setUsername(username); // Cập nhật username cho Todo
-		todoService.updateTodo(todo); // Cập nhật Todo
+		todoRepository.save(todo);
 		return "redirect:list-todos"; // Chuyển hướng sang URL /list-todos
 	}
 	
