@@ -20,7 +20,8 @@ public class TodoService {
 	} // Khối static này sẽ chạy khi class được load lần đầu tiên vào bộ nhớ
 
 	public List<Todo> getTodosByUsername(String username) {
-		return todos;
+		Predicate<? super Todo> predicate = todo -> todo.getUsername().equalsIgnoreCase(username); // Tạo một Predicate để kiểm tra username của Todo bằng với username truyền vào
+		return todos.stream().filter(predicate).toList(); // Lọc danh sách Todo theo username và trả về danh sách Todo tìm thấy
 	} // Lấy danh sách Todo theo username
 
 	public void addTodo(String username, String description, LocalDate date, boolean done) { // Thêm một Todo mới

@@ -3,16 +3,20 @@ package com.didan.spring_boot_web.todo;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import jakarta.validation.Valid;
 
 @Controller
+@SessionAttributes("username") // Lưu trữ thông tin username vào Session để sử dụng ở các request khác, khi có ModelMap put vào key "username"
 public class TodoController {
 	private final TodoService todoService; // Inject một Bean vào Controller từ Service
 
@@ -24,7 +28,8 @@ public class TodoController {
 	@RequestMapping(value = "list-todos", method = RequestMethod.GET) // Xử lý request GET từ client với URL là
 																		// /list-todos
 	public String getListTodosByUsername(ModelMap model) {
-		List<Todo> todos = todoService.getTodosByUsername("didannguyen"); // Lấy danh sách Todo theo username
+		String username = getUsernameInSecurity(model); // Lấy thông tin username từ SecurityContextHolder sau khi đăng nhập
+		List<Todo> todos = todoService.getTodosByUsername(username); // Lấy danh sách Todo theo username
 		model.addAttribute("todos", todos); // Truyền danh sách Todo sang View để hiển thị lên giao diện
 		return "listTodos"; // Trả về tên của file JSP mà bạn muốn hiển thị (= spring.mvc.view.prefix +
 							// "listTodos" + spring.mvc.view.suffix = /WEB-INF/views/listTodos.jsp)
@@ -86,6 +91,13 @@ public class TodoController {
 		todo.setUsername(username); // Cập nhật username cho Todo
 		todoService.updateTodo(todo); // Cập nhật Todo
 		return "redirect:list-todos"; // Chuyển hướng sang URL /list-todos
+	}
+	
+	private String getUsernameInSecurity(ModelMap model) { // Lấy thông tin username từ SecurityContextHolder sau khi đăng nhập
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); // Lấy thông tin
+																								// Authentication từ SecurityContextHolder
+		model.put("username", authentication.getName()); // Lưu thông tin username vào Session
+		return authentication.getName(); // Lấy thông tin username từ Authentication
 	}
 
 }
