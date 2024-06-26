@@ -30,6 +30,10 @@ public class UserDAOService {
 																			// không tìm thấy thì trả về null
 	}
 //	
-//	public User createUser() {}
+	public User createUser(User user) {
+		user.setId(users.size() + 1); // Set id cho user mới);
+		users.add(user); // Thêm user mới vào List
+		return user; // Trả về user mới
+	}
 
 }
