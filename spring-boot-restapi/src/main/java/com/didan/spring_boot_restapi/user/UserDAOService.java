@@ -35,5 +35,10 @@ public class UserDAOService {
 		users.add(user); // Thêm user mới vào List
 		return user; // Trả về user mới
 	}
+	
+	public void deleteUser(int id) {
+		Predicate<? super User> predicate = user -> user.getId() == id; // Tạo một Predicate để tìm user có id trùng với
+		users.removeIf(predicate); // Xóa user có id trùng với id truyền vào khỏi List nếu tìm thấy
+	}
 
 }

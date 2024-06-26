@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,4 +59,9 @@ public class UserResource {
 		return new ResponseEntity<>(newUser, headers, HttpStatus.CREATED); // Trả về 201 Created và URI của user mới tạo trong header	)
 	} // Ngoài ra sử dụng @ModelAttribute để map các dữ liệu từ formUrllEncoded,
 		// form-data vào User object
+	
+	@DeleteMapping(path = "{id}") // Tạo path cho method này là /users/{id}" để xóa user có id trùng với id truyền vào
+	public void deleteUser(@PathVariable("id") int id) {
+		userDAOService.deleteUser(id); // Gọi method deleteUser() từ UserDAOService để xóa user
+	}
 }
