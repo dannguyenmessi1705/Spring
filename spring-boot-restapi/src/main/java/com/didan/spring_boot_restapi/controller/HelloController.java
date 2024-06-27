@@ -22,7 +22,7 @@ public class HelloController {
 		this.messageSource = messageSource;
 	}
 	
-	@GetMapping(path = "/hello")
+	@GetMapping(path = {"/hello", "/dan"}) // Tạo path cho method này là /hello hoặc /dan
 	public Hello hello() {
 		return new Hello("Hello World!");
 	}
