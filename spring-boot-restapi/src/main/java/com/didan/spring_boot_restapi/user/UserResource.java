@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import jakarta.validation.Valid;
+
 @RestController()
 @RequestMapping(path = "users") // Tạo path cho tất cả các method trong class này là /users
 public class UserResource {
@@ -42,7 +44,7 @@ public class UserResource {
 	}
 
 	@PostMapping(path = "") // Tạo path cho method này là /users
-	public ResponseEntity<? super User> createUser(@RequestBody User user) { // Sử dụng @RequestBody để map request body từ
+	public ResponseEntity<? super User> createUser(@Valid @RequestBody User user) { // Sử dụng @RequestBody để map request body từ
 																		// JSON, XML vào User
 		// Kiểu trả về của method này là ResponseEntity<? super User> để có thể tùy chỉnh dữ liệu trả về
 		User newUser = userDAOService.createUser(user); // Gọi method createUser() từ UserDAOService
