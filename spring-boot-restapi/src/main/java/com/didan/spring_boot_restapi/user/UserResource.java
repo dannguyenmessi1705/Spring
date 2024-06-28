@@ -1,8 +1,12 @@
 package com.didan.spring_boot_restapi.user;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*; // Import tất cả các class trong package WebMvcLinkBuilder (sử dụng linkTO và methodOn cho HATEOAS)
+
 import java.net.URI;
 import java.util.List;
 
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -35,13 +39,31 @@ public class UserResource {
 	}
 
 	@GetMapping(path = "{id}") // Tạo path cho method này là /users/{id}
-	public ResponseEntity<? super User> getUser(@PathVariable("id") int id) { // Trả về user có id trùng với id truyền vào
+	// Sử dụng EntityModel<User> để tùy chỉnh dữ liệu trả về, thêm các link vào dữ liệu trả về (HATEOAS)
+	public ResponseEntity<EntityModel<User>> getUser(@PathVariable("id") int id) { // Trả về user có id trùng với id truyền vào
 		User user = userDAOService.findById(id); // Gọi method findById() từ UserDAOService
 		if (user == null) { // Nếu không tìm thấy user thì ném ra exception UserNotFound
 			throw new UserNotFound("User not found with id: " + id);
 		}
-		return new ResponseEntity<>(user, HttpStatus.OK); // Gọi method findById() từ UserDAOService
-	}
+		EntityModel<User> entityModel = EntityModel.of(user); // Tạo EntityModel<User> từ user chứa dữ liệu trả về
+		
+		WebMvcLinkBuilder link = linkTo(methodOn(this.getClass()).getAllUsers()); // Tạo link đến method getAllUsers()
+		
+		entityModel.add(link.withRel("all-users")); // Thêm link vào dữ liệu trả về với rel là "all-users"
+		
+		return new ResponseEntity<>(entityModel, HttpStatus.OK); // Trả về dữ liệu trả về
+	} 
+	// Khi truy cập vào /users/1 sẽ trả về dữ liệu như sau:
+	// {
+	//     "id": 1,
+	//     "name": "Didan",
+	//     "birthDate": "2021-08-08T00:00:00.000+00:00",
+	//     "_links": {
+	//         "all-users": {
+	//             "href": "http://localhost:8080/users"
+	//         }
+	//     }
+	// }
 
 	@PostMapping(path = "") // Tạo path cho method này là /users
 	public ResponseEntity<? super User> createUser(@Valid @RequestBody User user) { // Sử dụng @RequestBody để map request body từ
