@@ -15,7 +15,9 @@ public class SpringSecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 		// Xác thực tất cả các request
-		http.authorizeHttpRequests(req -> req.anyRequest().authenticated());
+		http.authorizeHttpRequests(req -> 
+				req.requestMatchers("*", "/**/jpa/**").permitAll() // Cho phép tất cả các request đến /jpa/**
+				.anyRequest().authenticated()); // Các request còn lại cần xác thực
 		
 		// Sử dụng form login nếu không xác thực được
 		http.httpBasic(withDefaults());
