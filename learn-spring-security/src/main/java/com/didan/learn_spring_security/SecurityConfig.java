@@ -11,6 +11,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl; // Import để sử dụng script tạo bảng user
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
@@ -38,7 +39,7 @@ public class SecurityConfig {
 	}
 	
 	@Bean
-	public JdbcUserDetailsManager inMemoryUserDetailsManager(DataSource dataSource) { // Bean này sẽ insert dữ liệu vào bảng user
+	public UserDetailsService userDetailsService(DataSource dataSource) { // Bean này sẽ insert dữ liệu vào bảng user
 		UserDetails user1 = User.withUsername("didan")
 				.password("{noop}didan") // password: didan, {noop} is a password encoder that does nothing
 				.roles("ADMIN", "USER")
