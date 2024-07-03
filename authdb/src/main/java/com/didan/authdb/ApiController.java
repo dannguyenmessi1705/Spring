@@ -1,19 +1,27 @@
 package com.didan.authdb;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.nimbusds.jwt.JWTClaimsSet;
 
 @RestController
 public class ApiController {
@@ -21,12 +29,18 @@ public class ApiController {
 	private final PasswordEncoder passwordEncoder;
 	private final RoleRepository roleRepository;
 	private final AuthenticationManager authenticationManager;
+	private final JwtEncoder jwtEncoder;
 	
-	public ApiController(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, AuthenticationManager authenticationManager) {
+	public ApiController(UserRepository userRepository, 
+			PasswordEncoder passwordEncoder, 
+			RoleRepository roleRepository,
+			AuthenticationManager authenticationManager,
+			JwtEncoder jwtEncoder) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.roleRepository = roleRepository;
 		this.authenticationManager = authenticationManager;
+		this.jwtEncoder = jwtEncoder;
 	}
 	
 	@PostMapping("/register")
@@ -67,6 +81,20 @@ public class ApiController {
 	@PostMapping("/login")
 	public ResponseEntity<?> auth(@RequestBody Login login) {
 		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPassword()));
-		return ResponseEntity.ok("User authenticated successfully");
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		return new ResponseEntity<>(new ResponseToken(createToken(auth)), HttpStatus.ACCEPTED);
+	}
+	
+	private String createToken(Authentication authentication) {
+		JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
+				.issuer("self")
+				.issuedAt(Instant.now())
+				.expiresAt(Instant.now().plusSeconds(60 * 15))
+				.subject(authentication.getName())
+				.build();
+		JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters.from(jwtClaimsSet);
+		return jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
 	}
 }
+
+record ResponseToken(String token) {};
