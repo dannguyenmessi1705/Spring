@@ -20,8 +20,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.support.HttpRequestHandlerServlet;
 
 import com.nimbusds.jwt.JWTClaimsSet;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 public class ApiController {
@@ -72,28 +75,33 @@ public class ApiController {
 	}
 	
 	@GetMapping("/{userId}")
-	public ResponseEntity<?> getMethodName(@PathVariable("userId") String userId) {
+	public ResponseEntity<?> getMethodName(@PathVariable("userId") String userId, Authentication authentication) { // Nếu đã xác minh thành công, authentication sẽ chứa thông tin user
 		Optional<Users> user = userRepository.findById(userId);
 		System.out.println(user.get());
+		System.out.println(authentication);
 		return new ResponseEntity<>(user.get(), HttpStatus.OK);
+	}
+	
+	@GetMapping("/decode-token")
+	public ResponseEntity<?> decodeToken(HttpServletRequest req) {
+		return new ResponseEntity<>(req.getHeader("Authorization"), HttpStatus.OK);
 	}
 	
 	@PostMapping("/login")
 	public ResponseEntity<?> auth(@RequestBody Login login) {
-		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPassword()));
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPassword())); // Lấy thông tin user authentication nếu đã xác minh thành công
 		return new ResponseEntity<>(new ResponseToken(createToken(auth)), HttpStatus.ACCEPTED);
 	}
 	
 	private String createToken(Authentication authentication) {
 		JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
-				.issuer("self")
-				.issuedAt(Instant.now())
-				.expiresAt(Instant.now().plusSeconds(60 * 15))
-				.subject(authentication.getName())
-				.build();
-		JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters.from(jwtClaimsSet);
-		return jwtEncoder.encode(jwtEncoderParameters).getTokenValue();
+				.issuer("self") // Issuer là người tạo ra token
+				.issuedAt(Instant.now()) // Thời gian tạo token
+				.expiresAt(Instant.now().plusSeconds(60 * 15)) // Thời gian hết hạn của token
+				.subject(authentication.getName()) // Chủ thể của token
+				.build(); // Tạo jwtClaimsSet
+		JwtEncoderParameters jwtEncoderParameters = JwtEncoderParameters.from(jwtClaimsSet); // Tạo jwtEncoderParameters từ jwtClaimsSet
+		return jwtEncoder.encode(jwtEncoderParameters).getTokenValue(); // Trả về token
 	}
 }
 
