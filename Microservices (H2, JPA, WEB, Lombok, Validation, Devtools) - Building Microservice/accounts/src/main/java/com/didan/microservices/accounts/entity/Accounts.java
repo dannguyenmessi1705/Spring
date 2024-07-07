@@ -20,7 +20,7 @@ public class Accounts extends BasicClass{
 	
 	@Id
 	@Column(name = "account_number")
-	private int accountNumber;
+	private Long accountNumber;
 	
 	@Column(name = "account_type")
 	private String accountType;
