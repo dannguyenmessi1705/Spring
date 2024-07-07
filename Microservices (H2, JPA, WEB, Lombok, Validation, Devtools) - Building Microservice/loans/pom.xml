@@ -12,6 +12,7 @@
 	<groupId>com.didan.microservices</groupId>
 	<artifactId>loans</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>loans</name>
 	<description>Microservices Loans App</description>
 	<url />
@@ -82,6 +83,9 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<image>
+						<name>dannguyenmessi/${project.artifactId}-bank:v1</name>
+					</image>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
