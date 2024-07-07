@@ -17,7 +17,7 @@ public class Customer extends BasicClass{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "native") // AUTO: tự động tăng, native: sử dụng cơ chế của DB
 	@Column(name = "customer_id")
-	private int customerId;
+	private Long customerId;
 	
 	@Column(name = "name")
 	private String name;

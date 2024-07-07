@@ -9,10 +9,10 @@ import com.didan.microservices.accounts.entity.Accounts;
 
 import jakarta.transaction.Transactional;
 
-public interface AccountsRepository extends JpaRepository<Accounts, Integer>{
-	Optional<Accounts> findByCustomerId(int customerId);
+public interface AccountsRepository extends JpaRepository<Accounts, Long>{
+	Optional<Accounts> findByCustomerId(Long customerId);
 	
 	@Transactional
 	@Modifying
-	void deleteByCustomerId(int customerId);
+	void deleteByCustomerId(Long customerId);
 }

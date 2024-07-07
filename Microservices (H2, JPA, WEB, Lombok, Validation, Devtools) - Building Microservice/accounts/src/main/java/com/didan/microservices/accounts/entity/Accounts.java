@@ -16,7 +16,7 @@ import lombok.ToString;
 public class Accounts extends BasicClass{
 
 	@Column(name = "customer_id")
-	private int customerId;
+	private Long customerId;
 	
 	@Id
 	@Column(name = "account_number")

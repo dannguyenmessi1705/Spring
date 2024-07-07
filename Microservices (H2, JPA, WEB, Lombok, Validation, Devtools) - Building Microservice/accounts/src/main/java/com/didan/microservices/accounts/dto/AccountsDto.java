@@ -12,8 +12,8 @@ import lombok.Data;
 )
 public class AccountsDto {
     @NotEmpty(message = "AccountNumber can not be a null or empty")
-    @Pattern(regexp="(^$|[0-9]{7})",message = "AccountNumber must be 7 digits")
-    @Schema(description = "Account Number of account", example = "1234567")
+    @Pattern(regexp="(^$|[0-9]{10})",message = "AccountNumber must be 10 digits")
+    @Schema(description = "Account Number of account", example = "0123456789")
 	private int accountNumber;
 	
     @NotEmpty(message = "AccountType can not be a null or empty")
