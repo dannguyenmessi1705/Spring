@@ -21,3 +21,15 @@ springdoc:
   path: /api-docs
  swagger-ui:
   path: /swagger-ui
+
+build:
+ version: "1.0"
+
+accounts:
+ message: "Welcome to Bank acoounts related local APIs"
+ contactDetails:
+  name: "Nguyen Di Dan - Developer"
+  email: "didan@dev.com"
+ onCallSupport:
+  - (843) 456-6789
+  - (846) 989-2223

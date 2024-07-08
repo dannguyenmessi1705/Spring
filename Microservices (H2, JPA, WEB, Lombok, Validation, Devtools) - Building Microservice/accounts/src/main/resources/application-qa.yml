@@ -1,2 +1,11 @@
-server:
- port: 8090
+build:
+  version: "2.0"
+
+accounts:
+  message: "Welcome to Bank acoounts related QA APIs"
+  contactDetails:
+    name: "Nguyen Thi Ha - QA Owner"
+    email: "thiha@qa.com"
+  onCallSupport:
+    - (843) 832-2478
+    - (844) 333-2378
