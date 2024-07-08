@@ -1,11 +1,11 @@
 build:
  version: "3.0"
 
-loans:
- message: "Welcome to Bank loans related production APIs"
+cards:
+ message: "Welcome to Bank cards related poduction APIs"
  contactDetails:
   name: "Nguyen Van Thang - Product Owner"
   email: "vanthang@prod.com"
  onCallSupport:
-  - (843) 456-6789
-  - (846) 989-2223
+  - (843) 243-3425
+  - (846) 489-2463
