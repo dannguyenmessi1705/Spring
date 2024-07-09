@@ -6,6 +6,11 @@ spring:
   profiles:
     active: git
     #active: native
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: "guest"
+    password: "guest"
   cloud:
     config:
       server:
@@ -19,3 +24,8 @@ spring:
           #search-locations: "classpath:/config"
 encrypt:
   key: "ff1e5a8caca2b09be73ac311a464be7d"
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
