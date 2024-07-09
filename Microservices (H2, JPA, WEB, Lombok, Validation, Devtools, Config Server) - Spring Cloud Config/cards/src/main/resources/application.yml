@@ -1,6 +1,8 @@
 server:
  port: 9000
 spring:
+ application:
+  name: "cards"
  datasource:
   url: jdbc:h2:mem:testdb
   driver-class-name: org.h2.Driver
@@ -15,21 +17,11 @@ spring:
    ddl-auto: update
   show-sql: true
  profiles:
-  active: ''
+  active: 'qa'
+ config:
+  import: optional:configserver:http://localhost:8071
 springdoc:
  api-docs:
   path: /api-docs
  swagger-ui:
   path: /swagger-ui
-
-build:
- version: "1.0"
-
-cards:
- message: "Welcome to Bank acoounts related local APIs"
- contactDetails:
-  name: "Nguyen Di Dan - Developer"
-  email: "didan@dev.com"
- onCallSupport:
-  - (843) 456-6789
-  - (846) 989-2223
