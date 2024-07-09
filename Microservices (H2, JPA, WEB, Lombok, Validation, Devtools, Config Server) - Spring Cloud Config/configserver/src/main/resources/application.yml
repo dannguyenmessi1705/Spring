@@ -17,3 +17,5 @@ spring:
           force-pull: true
         #native:
           #search-locations: "classpath:/config"
+encrypt:
+  key: "ff1e5a8caca2b09be73ac311a464be7d"
