@@ -1,0 +1,40 @@
+server:
+ port: 9000
+spring:
+ application:
+  name: "cards"
+ datasource:
+  url: jdbc:mysql://localhost:3306/accountsdb
+  username: 'root'
+  password: 'root'
+ jpa:
+  properties:
+   hibernate:
+    dialect: org.hibernate.dialect.MySQLDialect
+  hibernate:
+   ddl-auto: update
+  show-sql: true
+ sql:
+  init:
+   mode: always
+ profiles:
+  active: 'qa'
+ config:
+  import: optional:configserver:http://localhost:8071
+ rabbitmq:
+  host: "localhost"
+  port: 5672
+  username: "guest"
+  password: "guest"
+
+springdoc:
+ api-docs:
+  path: /api-docs
+ swagger-ui:
+  path: /swagger-ui
+
+management:
+ endpoints:
+  web:
+   exposure:
+    include: "*"

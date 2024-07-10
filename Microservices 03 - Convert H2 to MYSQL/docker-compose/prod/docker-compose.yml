@@ -1,0 +1,149 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    networks:
+      - didan
+  
+  accountsdb:
+    image: mysql:8.0
+    container_name: accountsdb
+    ports:
+      - "3305:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: accountsdb
+    networks:
+      - didan
+
+  loansdb:
+    image: mysql:8.0
+    container_name: loansdb
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: loansdb
+    networks:
+      - didan
+
+  cardsdb:
+    image: mysql:8.0
+    container_name: cardsdb
+    ports:
+      - "3308:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: cardsdb
+    networks:
+      - didan
+
+  configserver:
+    image: dannguyenmessi/configserver-bank:v1
+    container_name: configserver
+    ports:
+      - "8071:8071"
+    healthcheck:
+      test: "curl --fail http://configserver:8071/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - didan
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "configserver"
+      SPRING_PROFILES_ACTIVE: "prod"
+      SPRING_RABBITMQ_HOST: "rabbitmq"
+  
+  accounts:
+    image: dannguyenmessi/accounts-bank:v1
+    container_name: accounts
+    ports:
+      - "8080:8080"
+    networks:
+      - didan
+    depends_on:
+      configserver:
+        condition: service_healthy
+      accountsdb:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:mysql://accountsdb:3306/accountsdb"
+      SPRING_APPLICATION_NAME: "accounts"
+      SPRING_PROFILES_ACTIVE: "prod"
+      SPRING_RABBITMQ_HOST: "rabbitmq"
+      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
+
+  loans:
+    image: dannguyenmessi/loans-bank:v1
+    container_name: loans
+    ports:
+      - "8090:8090"
+    networks:
+      - didan
+    depends_on:
+      configserver:
+        condition: service_healthy
+      loansdb:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:mysql://loansdb:3306/loansdb"
+      SPRING_APPLICATION_NAME: "loans"
+      SPRING_PROFILES_ACTIVE: "prod"
+      SPRING_RABBITMQ_HOST: "rabbitmq"
+      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
+  
+  cards:
+    image: dannguyenmessi/cards-bank:v1
+    container_name: cards
+    ports:
+      - "9000:9000"
+    networks:
+      - didan
+    depends_on:
+      configserver:
+        condition: service_healthy
+      cardsdb:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:mysql://cardsdb:3306/cardsdb"
+      SPRING_APPLICATION_NAME: "cards"
+      SPRING_PROFILES_ACTIVE: "prod"
+      SPRING_RABBITMQ_HOST: "rabbitmq"
+      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
+
+networks:
+  didan:
+    driver: bridge

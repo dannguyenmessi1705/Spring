@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="031c376f-bbdd-4e1f-80f7-8883a7597223" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/docker-compose.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/src/main/java/com/didan/microservices/accounts/AccountsApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/src/main/java/com/didan/microservices/accounts/audit/AuditAwareImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/src/main/java/com/didan/microservices/accounts/constant/AccountsConstant.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/src/main/java/com/didan/microservices/accounts/controller/AccountsController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/src/main/java/com/didan/microservices/accounts/dto/AccountsContactInfoDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/src/main/java/com/didan/microservices/accounts/dto/AccountsDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/src/main/java/com/didan/microservices/accounts/dto/CustomerDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/src/main/java/com/didan/microservices/accounts/dto/ErrorDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/src/main/java/com/didan/microservices/accounts/dto/ResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/src/main/java/com/didan/microservices/accounts/entity/Accounts.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/src/main/java/com/didan/microservices/accounts/entity/BasicClass.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/src/main/java/com/didan/microservices/accounts/entity/Customer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/src/main/java/com/didan/microservices/accounts/exception/CustomerAlreadyExistException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/src/main/java/com/didan/microservices/accounts/exception/GlobalException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/src/main/java/com/didan/microservices/accounts/exception/ResourceNotFoundException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/src/main/java/com/didan/microservices/accounts/mapper/AccountsMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/src/main/java/com/didan/microservices/accounts/mapper/CustomerMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/src/main/java/com/didan/microservices/accounts/repository/AccountsRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/src/main/java/com/didan/microservices/accounts/repository/CustomerRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/src/main/java/com/didan/microservices/accounts/service/IAccountsService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/src/main/java/com/didan/microservices/accounts/service/impl/AccountServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/src/main/resources/application-prod.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/src/main/resources/application-qa.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/src/main/resources/application.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/src/main/resources/schema.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/accounts/src/test/java/com/didan/microservices/accounts/AccountsApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/src/main/java/com/didan/microservices/cards/CardsApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/src/main/java/com/didan/microservices/cards/audit/AuditAwareImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/src/main/java/com/didan/microservices/cards/constants/CardsConstants.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/src/main/java/com/didan/microservices/cards/controller/CardsController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/src/main/java/com/didan/microservices/cards/dto/CardsContactInfoDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/src/main/java/com/didan/microservices/cards/dto/CardsDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/src/main/java/com/didan/microservices/cards/dto/ErrorResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/src/main/java/com/didan/microservices/cards/dto/ResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/src/main/java/com/didan/microservices/cards/entity/BasicClass.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/src/main/java/com/didan/microservices/cards/entity/Cards.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/src/main/java/com/didan/microservices/cards/exception/CardAlreadyExistsException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/src/main/java/com/didan/microservices/cards/exception/GlobalExceptionHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/src/main/java/com/didan/microservices/cards/exception/ResourceNotFoundException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/src/main/java/com/didan/microservices/cards/mapper/CardsMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/src/main/java/com/didan/microservices/cards/repository/CardsRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/src/main/java/com/didan/microservices/cards/service/ICardsService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/src/main/java/com/didan/microservices/cards/service/impl/CardsServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/src/main/resources/application-prod.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/src/main/resources/application-qa.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/src/main/resources/application.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/src/main/resources/schema.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/cards/src/test/java/com/didan/microservices/cards/CardsApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/src/main/java/com/didan/microservices/loans/LoansApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/src/main/java/com/didan/microservices/loans/audit/AuditAwareImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/src/main/java/com/didan/microservices/loans/constant/LoansConstant.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/src/main/java/com/didan/microservices/loans/controller/LoansController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/src/main/java/com/didan/microservices/loans/dto/ErrorResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/src/main/java/com/didan/microservices/loans/dto/LoansContactInfoDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/src/main/java/com/didan/microservices/loans/dto/LoansDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/src/main/java/com/didan/microservices/loans/dto/ResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/src/main/java/com/didan/microservices/loans/entity/BasicClass.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/src/main/java/com/didan/microservices/loans/entity/Loans.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/src/main/java/com/didan/microservices/loans/exception/GlobalExceptionHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/src/main/java/com/didan/microservices/loans/exception/LoanAlreadyExistsException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/src/main/java/com/didan/microservices/loans/exception/ResourceNotFoundException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/src/main/java/com/didan/microservices/loans/mapper/LoansMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/src/main/java/com/didan/microservices/loans/repository/LoansRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/src/main/java/com/didan/microservices/loans/service/ILoansService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/src/main/java/com/didan/microservices/loans/service/impl/LoansServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/src/main/resources/application-prod.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/src/main/resources/application-qa.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/src/main/resources/application.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/src/main/resources/schema.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools) - Building Microservice/loans/src/test/java/com/didan/microservices/loans/LoansApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/.idea/Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/docker-compose.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/src/main/java/com/didan/microservices/accounts/AccountsApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/src/main/java/com/didan/microservices/accounts/audit/AuditAwareImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/src/main/java/com/didan/microservices/accounts/constant/AccountsConstant.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/src/main/java/com/didan/microservices/accounts/controller/AccountsController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/src/main/java/com/didan/microservices/accounts/dto/AccountsContactInfoDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/src/main/java/com/didan/microservices/accounts/dto/AccountsDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/src/main/java/com/didan/microservices/accounts/dto/CustomerDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/src/main/java/com/didan/microservices/accounts/dto/ErrorDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/src/main/java/com/didan/microservices/accounts/dto/ResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/src/main/java/com/didan/microservices/accounts/entity/Accounts.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/src/main/java/com/didan/microservices/accounts/entity/BasicClass.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/src/main/java/com/didan/microservices/accounts/entity/Customer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/src/main/java/com/didan/microservices/accounts/exception/CustomerAlreadyExistException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/src/main/java/com/didan/microservices/accounts/exception/GlobalException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/src/main/java/com/didan/microservices/accounts/exception/ResourceNotFoundException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/src/main/java/com/didan/microservices/accounts/mapper/AccountsMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/src/main/java/com/didan/microservices/accounts/mapper/CustomerMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/src/main/java/com/didan/microservices/accounts/repository/AccountsRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/src/main/java/com/didan/microservices/accounts/repository/CustomerRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/src/main/java/com/didan/microservices/accounts/service/IAccountsService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/src/main/java/com/didan/microservices/accounts/service/impl/AccountServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/src/main/resources/application.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/src/main/resources/schema.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/accounts/src/test/java/com/didan/microservices/accounts/AccountsApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/cards/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/cards/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/cards/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/cards/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/cards/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/cards/src/main/java/com/didan/microservices/cards/CardsApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/cards/src/main/java/com/didan/microservices/cards/audit/AuditAwareImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/cards/src/main/java/com/didan/microservices/cards/constants/CardsConstants.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/cards/src/main/java/com/didan/microservices/cards/controller/CardsController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/cards/src/main/java/com/didan/microservices/cards/dto/CardsContactInfoDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/cards/src/main/java/com/didan/microservices/cards/dto/CardsDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/cards/src/main/java/com/didan/microservices/cards/dto/ErrorResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/cards/src/main/java/com/didan/microservices/cards/dto/ResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/cards/src/main/java/com/didan/microservices/cards/entity/BasicClass.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/cards/src/main/java/com/didan/microservices/cards/entity/Cards.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/cards/src/main/java/com/didan/microservices/cards/exception/CardAlreadyExistsException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/cards/src/main/java/com/didan/microservices/cards/exception/GlobalExceptionHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/cards/src/main/java/com/didan/microservices/cards/exception/ResourceNotFoundException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/cards/src/main/java/com/didan/microservices/cards/mapper/CardsMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/cards/src/main/java/com/didan/microservices/cards/repository/CardsRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/cards/src/main/java/com/didan/microservices/cards/service/ICardsService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/cards/src/main/java/com/didan/microservices/cards/service/impl/CardsServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/cards/src/main/resources/application.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/cards/src/main/resources/schema.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/cards/src/test/java/com/didan/microservices/cards/CardsApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/configserver/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/configserver/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/configserver/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/configserver/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/configserver/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/configserver/src/main/java/com/didan/microservices/configserver/ConfigserverApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/configserver/src/main/resources/application.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/configserver/src/main/resources/config/accounts-prod.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/configserver/src/main/resources/config/accounts-qa.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/configserver/src/main/resources/config/accounts.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/configserver/src/main/resources/config/cards-prod.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/configserver/src/main/resources/config/cards-qa.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/configserver/src/main/resources/config/cards.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/configserver/src/main/resources/config/loans-prod.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/configserver/src/main/resources/config/loans-qa.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/configserver/src/main/resources/config/loans.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/configserver/src/test/java/com/didan/microservices/configserver/ConfigserverApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/docker-compose/default/docker-compose.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/docker-compose/prod/docker-compose.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/docker-compose/qa/docker-compose.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/loans/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/loans/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/loans/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/loans/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/loans/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/loans/src/main/java/com/didan/microservices/loans/LoansApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/loans/src/main/java/com/didan/microservices/loans/audit/AuditAwareImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/loans/src/main/java/com/didan/microservices/loans/constant/LoansConstant.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/loans/src/main/java/com/didan/microservices/loans/controller/LoansController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/loans/src/main/java/com/didan/microservices/loans/dto/ErrorResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/loans/src/main/java/com/didan/microservices/loans/dto/LoansContactInfoDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/loans/src/main/java/com/didan/microservices/loans/dto/LoansDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/loans/src/main/java/com/didan/microservices/loans/dto/ResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/loans/src/main/java/com/didan/microservices/loans/entity/BasicClass.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/loans/src/main/java/com/didan/microservices/loans/entity/Loans.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/loans/src/main/java/com/didan/microservices/loans/exception/GlobalExceptionHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/loans/src/main/java/com/didan/microservices/loans/exception/LoanAlreadyExistsException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/loans/src/main/java/com/didan/microservices/loans/exception/ResourceNotFoundException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/loans/src/main/java/com/didan/microservices/loans/mapper/LoansMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/loans/src/main/java/com/didan/microservices/loans/repository/LoansRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/loans/src/main/java/com/didan/microservices/loans/service/ILoansService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/loans/src/main/java/com/didan/microservices/loans/service/impl/LoansServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/loans/src/main/resources/application.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/loans/src/main/resources/schema.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Microservices (H2, JPA, WEB, Lombok, Validation, Devtools, Config Server) - Spring Cloud Config/loans/src/test/java/com/didan/microservices/loans/LoansApplicationTests.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2j2b14dZaaYuwajRz1YjB4EBgDX" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Maven.accounts [compile,jib:dockerBuild].executor": "Run",
+    "Maven.cards [compile,jib:dockerBuild].executor": "Run",
+    "Maven.configserver [compile,jib:dockerBuild].executor": "Run",
+    "Maven.loans [compile,jib:dockerBuild].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/messi/Documents/CODE/Spring/Microservices-03 (MYSQL, JPA, WEB, Lombok, Validation, Devtools, Config Server, Config Client, Monitor, Spring Cloud Bus, RabbitMQ) - Convert H2 to MYSQL",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "run.configurations.included.in.services": "true",
+    "settings.editor.selected.configurable": "preferences.keymap",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="Spring Boot.CardsApplication">
+    <configuration name="AccountsApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="accounts" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.didan.microservices.accounts.AccountsApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CardsApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="cards" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.didan.microservices.cards.CardsApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ConfigserverApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="configserver" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.didan.microservices.configserver.ConfigserverApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="LoansApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="loans" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.didan.microservices.loans.LoansApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.18034.62" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.18034.62" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="031c376f-bbdd-4e1f-80f7-8883a7597223" name="Changes" comment="" />
+      <created>1720587902033</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1720587902033</updated>
+      <workItem from="1720587903055" duration="69000" />
+      <workItem from="1720588006612" duration="119000" />
+      <workItem from="1720602057749" duration="2126000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+</project>
