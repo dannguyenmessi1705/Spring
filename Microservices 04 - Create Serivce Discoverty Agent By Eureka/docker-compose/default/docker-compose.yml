@@ -1,96 +1,135 @@
 services:
   configserver:
-    image: dannguyenmessi/configserver:v1
-    container_name: configserver
+    image: "dannguyenmessi/configserver:v1"
+    container_name: configserver-ms
     ports:
       - "8071:8071"
     healthcheck:
-      test: "curl --fail --silent http://configserver:8071/actuator/health/readiness | grep UP || exit 1"
+      test: "curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
       interval: 10s
       timeout: 5s
       retries: 10
       start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 700m
     networks:
       - didan
-    environment:
-      SPRING_APPLICATION_NAME: "configserver"
 
   eurekaserver:
-    image: dannguyenmessi/eurekaserver:v1
-    container_name: eurekaserver
+    image: "dannguyenmessi/eurekaserver:v1"
+    container_name: eurekaserver-ms
     ports:
       - "8070:8070"
+    depends_on:
+      configserver:
+        condition: service_healthy
     healthcheck:
-      test: "curl --fail --silent http://configserver:8070/actuator/health/readiness | grep UP || exit 1"
+      test: "curl --fail --silent localhost:8070/actuator/health/readiness | grep UP || exit 1"
       interval: 10s
       timeout: 5s
       retries: 10
       start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 700m
     networks:
       - didan
     environment:
       SPRING_APPLICATION_NAME: "eurekaserver"
-      SPRING_PROFILES_ACTIVE: "default"
-      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
-    depends_on:
-      configserver:
-        condition: service_healthy
-  
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+
   accounts:
-    image: dannguyenmessi/accounts:v1
-    container_name: accounts
+    image: "dannguyenmessi/accounts:v1"
+    container_name: accounts-ms
     ports:
       - "8080:8080"
-    networks:
-      - didan
     depends_on:
       configserver:
         condition: service_healthy
       eurekaserver:
-        condition: service_started
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - didan
     environment:
       SPRING_APPLICATION_NAME: "accounts"
-      SPRING_PROFILES_ACTIVE: "default"
-      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
-
 
   loans:
-    image: dannguyenmessi/loans:v1
-    container_name: loans
+    image: "dannguyenmessi/loans:v1"
+    container_name: loans-ms
     ports:
       - "8090:8090"
-    networks:
-      - didan
     depends_on:
       configserver:
         condition: service_healthy
       eurekaserver:
-        condition: service_started
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - didan
     environment:
       SPRING_APPLICATION_NAME: "loans"
-      SPRING_PROFILES_ACTIVE: "default"
-      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
-  
-  cards:
-    image: dannguyenmessi/cards:v1
-    container_name: cards
+
+  loans1:
+    image: "dannguyenmessi/loans:v1"
+    container_name: loans-ms1
     ports:
-      - "9000:9000"
-    networks:
-      - didan
+      - "8091:8090"
     depends_on:
       configserver:
         condition: service_healthy
       eurekaserver:
-        condition: service_started
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - didan
+    environment:
+      SPRING_APPLICATION_NAME: "loans"
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
+
+  cards:
+    image: "dannguyenmessi/cards:v1"
+    container_name: cards-ms
+    ports:
+      - "9000:9000"
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - didan
     environment:
       SPRING_APPLICATION_NAME: "cards"
-      SPRING_PROFILES_ACTIVE: "default"
-      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
 
 networks:
   didan:
-    driver: bridge
+    driver: "bridge"
