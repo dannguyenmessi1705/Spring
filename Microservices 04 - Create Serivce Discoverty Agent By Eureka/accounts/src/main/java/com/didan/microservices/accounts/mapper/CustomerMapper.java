@@ -1,5 +1,6 @@
 package com.didan.microservices.accounts.mapper;
 
+import com.didan.microservices.accounts.dto.CustomerDetailsDto;
 import com.didan.microservices.accounts.dto.CustomerDto;
 import com.didan.microservices.accounts.entity.Customer;
 
@@ -17,5 +18,12 @@ public class CustomerMapper {
 		customer.setEmail(customerDto.getEmail());
 		customer.setMobile(customerDto.getMobile());
 		return customer;
+	}
+
+	public static CustomerDetailsDto mapToCustomerDetailsDto(Customer customer, CustomerDetailsDto customerDetailsDto) {
+		customerDetailsDto.setName(customer.getName());
+		customerDetailsDto.setEmail(customer.getEmail());
+		customerDetailsDto.setMobile(customer.getMobile());
+		return customerDetailsDto;
 	}
 }

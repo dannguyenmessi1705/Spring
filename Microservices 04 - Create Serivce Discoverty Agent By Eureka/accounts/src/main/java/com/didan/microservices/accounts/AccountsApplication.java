@@ -2,6 +2,7 @@ package com.didan.microservices.accounts;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -17,6 +18,7 @@ import io.swagger.v3.oas.annotations.servers.Servers;
 
 @SpringBootApplication
 @EnableJpaAuditing(auditorAwareRef = "auditAwareImpl") // Sử dụng JPA Auditing và trỏ đến Bean auditAwareImpl để lấy thông tin người tạo hoặc cập nhật dữ liệu
+@EnableFeignClients // Sử dụng Feign để gọi các API từ các Microservices khác
 @OpenAPIDefinition(
 	info = @Info(
 		title = "Microservices Accounts API documents",
