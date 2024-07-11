@@ -1,40 +1,40 @@
 services:
-  rabbitmq:
-    image: rabbitmq:3.13-management
-    container_name: rabbitmq
-    hostname: rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    healthcheck:
-      test: rabbitmq-diagnostics check_port_connectivity
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 5s
-    networks:
-      - didan
-  
   configserver:
     image: dannguyenmessi/configserver:v1
     container_name: configserver
     ports:
       - "8071:8071"
     healthcheck:
-      test: "curl --fail http://configserver:8071/actuator/health/readiness | grep UP || exit 1"
+      test: "curl --fail --silent http://configserver:8071/actuator/health/readiness | grep UP || exit 1"
       interval: 10s
       timeout: 5s
       retries: 10
       start_period: 10s
     networks:
       - didan
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "configserver"
+
+  eurekaserver:
+    image: dannguyenmessi/eurekaserver:v1
+    container_name: eurekaserver
+    ports:
+      - "8070:8070"
+    healthcheck:
+      test: "curl --fail --silent http://configserver:8070/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - didan
+    environment:
+      SPRING_APPLICATION_NAME: "eurekaserver"
       SPRING_PROFILES_ACTIVE: "default"
-      SPRING_RABBITMQ_HOST: "rabbitmq"
+      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
+    depends_on:
+      configserver:
+        condition: service_healthy
   
   accounts:
     image: dannguyenmessi/accounts:v1
@@ -46,11 +46,14 @@ services:
     depends_on:
       configserver:
         condition: service_healthy
+      eurekaserver:
+        condition: service_started
     environment:
       SPRING_APPLICATION_NAME: "accounts"
       SPRING_PROFILES_ACTIVE: "default"
-      SPRING_RABBITMQ_HOST: "rabbitmq"
       SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
+
 
   loans:
     image: dannguyenmessi/loans:v1
@@ -62,11 +65,13 @@ services:
     depends_on:
       configserver:
         condition: service_healthy
+      eurekaserver:
+        condition: service_started
     environment:
       SPRING_APPLICATION_NAME: "loans"
       SPRING_PROFILES_ACTIVE: "default"
-      SPRING_RABBITMQ_HOST: "rabbitmq"
       SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
   
   cards:
     image: dannguyenmessi/cards:v1
@@ -78,11 +83,13 @@ services:
     depends_on:
       configserver:
         condition: service_healthy
+      eurekaserver:
+        condition: service_started
     environment:
       SPRING_APPLICATION_NAME: "cards"
       SPRING_PROFILES_ACTIVE: "default"
-      SPRING_RABBITMQ_HOST: "rabbitmq"
       SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
 
 networks:
   didan:
