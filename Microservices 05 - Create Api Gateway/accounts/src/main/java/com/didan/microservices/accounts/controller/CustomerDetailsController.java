@@ -49,7 +49,7 @@ public class CustomerDetailsController {
           )
       }
   )
-  @GetMapping("/fetch")
+  @GetMapping("/fetch-customer")
   public ResponseEntity<? super CustomerDetailsDto> fetch(
       @RequestParam
       @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile number must be 10 digits")

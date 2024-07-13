@@ -7,7 +7,7 @@ spring:
     gateway:
       discovery:
         locator:
-          enabled: true # Cho ph�p Gateway Server s? d?ng Eureka ?? t�m ki?m, ??nh tuy?n c�c service
+          enabled: false # Cho ph�p Gateway Server s? d?ng Eureka ?? t�m ki?m, ??nh tuy?n c�c service
           lower-case-service-id: true # Chuy?n t�n service th�nh ch? th??ng, tr�nh l?i khi g?i service
 
 management:
