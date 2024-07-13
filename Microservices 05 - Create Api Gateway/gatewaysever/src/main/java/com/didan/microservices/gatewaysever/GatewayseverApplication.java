@@ -1,5 +1,6 @@
 package com.didan.microservices.gatewaysever;
 
+import java.time.LocalTime;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.gateway.route.RouteLocator;
@@ -18,7 +19,8 @@ public class GatewayseverApplication {
   RouteLocator createRouteLocator(RouteLocatorBuilder routeLocatorBuilder) { // RouteLocatorBuilder giúp tạo ra các route
     return routeLocatorBuilder.routes() // Tạo ra các route
         .route(p -> p.path("/didan/accounts/**") // Đường dẫn của route
-            .filters(f -> f.rewritePath("/didan/accounts/(?<remaining>.*)", "/${remaining}")) // Rewrite đường dẫn
+            .filters(f -> f.rewritePath("/didan/accounts/(?<remaining>.*)", "/${remaining}")  // Rewrite đường dẫn
+                .addRequestHeader("X-TIME", LocalTime.now().toString())) // Thêm header vào request
             .uri("lb://ACCOUNTS")) // Đường dẫn của microservices cần gọi
         .route(p -> p.path("/didan/loans/**")
             .filters(f -> f.rewritePath("/didan/loans/(?<remaining>.*)", "/${remaining}"))
