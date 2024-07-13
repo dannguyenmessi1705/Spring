@@ -1,0 +1,11 @@
+server:
+  port: 8070
+
+eureka:
+  instance:
+    hostname: localhost # Nói cho Eureka Server xem xét địa chỉ IP hoặc tên máy chủ mà nó sẽ sử dụng để truy cập nó
+  client:
+    fetch-registry: false # Đặt giá trị này thành false nếu bạn không muốn Eureka Server truy cập vào chính nó, chỉ true với các ứng dụng khác
+    register-with-eureka: false # Đặt giá trị này thành false nếu bạn không muốn đăng ký với chính mình, chỉ true với các ứng dụng khác
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/euraka/ # Địa chỉ URL mà các ứng dụng khác sẽ sử dụng để truy cập Eureka Server

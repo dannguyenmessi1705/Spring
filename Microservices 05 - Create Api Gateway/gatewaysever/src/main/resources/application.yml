@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: "gatewayserver"
+  config:
+    import: optional:configserver:http://localhost:8071
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true # Cho phép Gateway Server s? d?ng Eureka ?? tìm ki?m, ??nh tuy?n các service
+          lowerCaseServiceId: true # Chuy?n tên service thành ch? th??ng, tránh l?i khi g?i service
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" # Cho phép hi?n th? t?t c? các endpoint
+  endpoint:
+    gateway:
+      enabled: true # Cho phép dùng endpoint /actuator/gateway ?? xem thông tin v? các route
+  info:
+    env:
+      enabled: true # Cho phép dùng endpoint /actuator/info ?? xem thông tin v? service
+
+info: # Thông tin v? service hi?n th? trên Eureka dashboard
+  app:
+    name: "gatewayserver"
+    description: "Bank Gateway Server Application Microservices"
+    version: "1.0.0"
+
+# C?u hình ? Config Server
+#server:
+#  port: 8072
+#
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#  client:
+#    fetch-registry: true
+#    register-with-eureka: true
+#    service-url:
+#      defaultZone: http://localhost:8070/eureka/

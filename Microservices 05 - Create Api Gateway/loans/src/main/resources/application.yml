@@ -1,0 +1,63 @@
+server:
+ port: 8090
+spring:
+ application:
+  name: "loans"
+ datasource:
+  url: jdbc:h2:mem:testdb
+  driver-class-name: org.h2.Driver
+  username: sa
+  password: ''
+ h2:
+  console:
+   enabled: true
+ jpa:
+  database-platform: org.hibernate.dialect.H2Dialect
+  hibernate:
+   ddl-auto: update
+  show-sql: true
+ profiles:
+  active: 'default'
+ config:
+  import: "optional:configserver:http://localhost:8071"
+
+springdoc:
+ api-docs:
+  path: /api-docs
+ swagger-ui:
+  path: /swagger-ui
+
+## Chúng ta cần đăng ký và khai báo endpoint để cho phép Eureka Server kiểm tra sức khỏe của service cũng như để shutdown service 1 cách an toàn, tránh shutdown đột ngột như cách bấm nút tắt máy
+management:
+ endpoints:
+  web:
+   exposure:
+    include: "*"
+ endpoint:
+  shutdown:
+   enabled: true # Cho phép dùng endpoint /actuator/shutdown để tắt service mà không cần tắt container
+ info:
+  env:
+   enabled: true # Cho phép dùng endpoint /actuator/info để xem thông tin về service
+
+## Cấu hình endpoint /shutdown cho service
+#endpoints:
+# shutdown:
+#  enabled: true # Cho phép dùng endpoint /shutdown để tắt service mà không cần tắt container
+
+## Cấu hình Eureka client
+eureka:
+ instance:
+  prefer-ip-address: true # Các service sẽ đăng ký với Eureka dùng IP thay vì dùng dns hoặc hostname
+ client:
+  fetch-registry: true # Service này sẽ fetch thông tin của các service khác từ Eureka server
+  register-with-eureka: true # Service này sẽ đăng ký với Eureka server
+  service-url:
+   defaultZone: http://localhost:8070/eureka/ # URL của Eureka server
+
+## Thông tin về service hiển thị trên Eureka dashboard
+info:
+ app:
+  name: "accounts"
+  description: "Bank account application"
+  version: "1.0.0"
