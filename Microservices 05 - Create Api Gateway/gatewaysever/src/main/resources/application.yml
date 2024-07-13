@@ -7,28 +7,28 @@ spring:
     gateway:
       discovery:
         locator:
-          enabled: true # Cho phép Gateway Server s? d?ng Eureka ?? tìm ki?m, ??nh tuy?n các service
-          lowerCaseServiceId: true # Chuy?n tên service thành ch? th??ng, tránh l?i khi g?i service
+          enabled: true # Cho phï¿½p Gateway Server s? d?ng Eureka ?? tï¿½m ki?m, ??nh tuy?n cï¿½c service
+          lower-case-service-id: true # Chuy?n tï¿½n service thï¿½nh ch? th??ng, trï¿½nh l?i khi g?i service
 
 management:
   endpoints:
     web:
       exposure:
-        include: "*" # Cho phép hi?n th? t?t c? các endpoint
+        include: "*" # Cho phï¿½p hi?n th? t?t c? cï¿½c endpoint
   endpoint:
     gateway:
-      enabled: true # Cho phép dùng endpoint /actuator/gateway ?? xem thông tin v? các route
+      enabled: true # Cho phï¿½p dï¿½ng endpoint /actuator/gateway ?? xem thï¿½ng tin v? cï¿½c route
   info:
     env:
-      enabled: true # Cho phép dùng endpoint /actuator/info ?? xem thông tin v? service
+      enabled: true # Cho phï¿½p dï¿½ng endpoint /actuator/info ?? xem thï¿½ng tin v? service
 
-info: # Thông tin v? service hi?n th? trên Eureka dashboard
+info: # Thï¿½ng tin v? service hi?n th? trï¿½n Eureka dashboard
   app:
     name: "gatewayserver"
     description: "Bank Gateway Server Application Microservices"
     version: "1.0.0"
 
-# C?u hình ? Config Server
+# C?u hï¿½nh ? Config Server
 #server:
 #  port: 8072
 #
