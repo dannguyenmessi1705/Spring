@@ -34,7 +34,7 @@ public class RequestTraceFilter implements GlobalFilter { // GlobalFilter là m�
       exchange = filterUtility.setCorrelationId(exchange, correlationID); // Set correlation-id vào request
       logger.debug("Bank-correlation-id generated in RequestTraceFilter : {}", correlationID); // In ra log correlation-id đã tạo
     }
-    return chain.filter(exchange);
+    return chain.filter(exchange); // Chuyển tiếp request đến các filter khác
   }
 
   private boolean isCorrelationIdPresent(HttpHeaders requestHeaders) {
