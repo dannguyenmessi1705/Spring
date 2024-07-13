@@ -47,6 +47,12 @@ services:
     container_name: accounts-ms
     ports:
       - "8080:8080"
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     depends_on:
       configserver:
         condition: service_healthy
@@ -69,6 +75,12 @@ services:
     container_name: loans-ms
     ports:
       - "8090:8090"
+    healthcheck:
+      test: "curl --fail --silent localhost:8090/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     depends_on:
       configserver:
         condition: service_healthy
@@ -91,6 +103,12 @@ services:
     container_name: loans-ms1
     ports:
       - "8091:8090"
+    healthcheck:
+      test: "curl --fail --silent localhost:8090/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     depends_on:
       configserver:
         condition: service_healthy
@@ -113,6 +131,12 @@ services:
     container_name: cards-ms
     ports:
       - "9000:9000"
+    healthcheck:
+        test: "curl --fail --silent localhost:9000/actuator/health/readiness | grep UP || exit 1"
+        interval: 10s
+        timeout: 5s
+        retries: 10
+        start_period: 10s
     depends_on:
       configserver:
         condition: service_healthy
@@ -129,6 +153,32 @@ services:
       SPRING_PROFILES_ACTIVE: default
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
+
+  gatewayserver:
+    image: "dannguyenmessi/gatewaysever:v1"
+    container_name: gatewayserver-ms
+    ports:
+      - "8072:8072"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - didan
+    environment:
+      SPRING_APPLICATION_NAME: "gatewayserver"
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
+    depends_on:
+      accounts:
+        condition: service_healthy
+      loans:
+        condition: service_healthy
+      loans1:
+        condition: service_healthy
+      cards:
+        condition: service_healthy
 
 networks:
   didan:
