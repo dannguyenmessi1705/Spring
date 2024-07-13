@@ -26,7 +26,7 @@ public class CustomerDetailsService implements ICustomerDetailsService{
   private final CardsFeignClient cardsFeignClient;
   private final LoansFeignClient loansFeignClient;
   @Override
-  public CustomerDetailsDto fetchCustomerDetails(String mobileNumber) {
+  public CustomerDetailsDto fetchCustomerDetails(String correlationId, String mobileNumber) {
     Customer customer = customerRepository.findByMobile(mobileNumber)
         .orElseThrow(() -> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber));
     Accounts accounts = accountsRepository.findByCustomerId(customer.getCustomerId())
@@ -34,8 +34,8 @@ public class CustomerDetailsService implements ICustomerDetailsService{
 
     CustomerDetailsDto customerDetailsDto = CustomerMapper.mapToCustomerDetailsDto(customer, new CustomerDetailsDto());
     customerDetailsDto.setAccountsDto(AccountsMapper.mapToAccountsDto(accounts, new AccountsDto()));
-    ResponseEntity<LoansDto> loansDtoResponseEntity = loansFeignClient.fetchLoanDetails(mobileNumber);
-    ResponseEntity<CardsDto> cardsDtoResponseEntity = cardsFeignClient.fetchCardDetails(mobileNumber);
+    ResponseEntity<LoansDto> loansDtoResponseEntity = loansFeignClient.fetchLoanDetails(correlationId, mobileNumber);
+    ResponseEntity<CardsDto> cardsDtoResponseEntity = cardsFeignClient.fetchCardDetails(correlationId, mobileNumber);
     customerDetailsDto.setLoansDto(loansDtoResponseEntity.getBody()); // Gọi đến Microservices loans để lấy thông tin khoản vay của khách hàng
     customerDetailsDto.setCardsDto(cardsDtoResponseEntity.getBody()); // Gọi đến Microservices cards để lấy thông tin thẻ của khách hàng
     return customerDetailsDto;

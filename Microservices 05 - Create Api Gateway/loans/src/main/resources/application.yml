@@ -61,3 +61,10 @@ info:
   name: "accounts"
   description: "Bank account application"
   version: "1.0.0"
+
+logging:
+ level:
+  com:
+   didan:
+    microservices:
+     loans: debug # Log các thông tin debug của Loans Service

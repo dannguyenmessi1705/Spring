@@ -28,6 +28,13 @@ info: # Th�ng tin v? service hi?n th? tr�n Eureka dashboard
     description: "Bank Gateway Server Application Microservices"
     version: "1.0.0"
 
+logging:
+  level:
+    com:
+      didan:
+        microservices:
+          gatewaysever: debug # Log c�c th�ng tin debug c?a Gateway Server
+
 # C?u h�nh ? Config Server
 #server:
 #  port: 8072
