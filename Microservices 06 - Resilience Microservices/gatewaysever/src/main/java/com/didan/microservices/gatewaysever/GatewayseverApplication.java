@@ -21,7 +21,8 @@ public class GatewayseverApplication {
         .route(p -> p.path("/didan/accounts/**") // Đường dẫn của route
             .filters(f -> f.rewritePath("/didan/accounts/(?<remaining>.*)", "/${remaining}")  // Rewrite đường dẫn
                 .addRequestHeader("X-TIME", LocalTime.now().toString())  // Thêm header vào request
-                .circuitBreaker(config -> config.setName("accountsCircuitBreaker"))) // Sử dụng Circuit Breaker, tên là accountsCircuitBreaker
+                .circuitBreaker(config -> config.setName("accountsCircuitBreaker") // Sử dụng Circuit Breaker, tên là accountsCircuitBreaker
+                    .setFallbackUri("forward:/contactSupport"))) // Nếu có lỗi thì chuyển hướng đến đường dẫn /contactSupport, đã định nghĩa trong Controller
             .uri("lb://ACCOUNTS")) // Đường dẫn của microservices cần gọi
         .route(p -> p.path("/didan/loans/**")
             .filters(f -> f.rewritePath("/didan/loans/(?<remaining>.*)", "/${remaining}"))
