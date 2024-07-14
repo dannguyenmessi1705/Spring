@@ -1,0 +1,11 @@
+build:
+  version: "3.0"
+
+accounts:
+  message: "Welcome to Bank acoounts related production APIs"
+  contactDetails:
+    name: "Nguyen Van Thang - Product Owner"
+    email: "vanthang@prod.com"
+  onCallSupport:
+    - (843) 136-1373
+    - (846) 231-3373

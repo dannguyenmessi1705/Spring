@@ -1,0 +1,60 @@
+spring:
+  application:
+    name: "gatewayserver"
+  config:
+    import: optional:configserver:http://localhost:8071
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: false # Cho ph�p Gateway Server s? d?ng Eureka ?? t�m ki?m, ??nh tuy?n c�c service
+          lower-case-service-id: true # Chuy?n t�n service th�nh ch? th??ng, tr�nh l?i khi g?i service
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" # Cho ph�p hi?n th? t?t c? c�c endpoint
+  endpoint:
+    gateway:
+      enabled: true # Cho ph�p d�ng endpoint /actuator/gateway ?? xem th�ng tin v? c�c route
+  info:
+    env:
+      enabled: true # Cho ph�p d�ng endpoint /actuator/info ?? xem th�ng tin v? service
+
+info: # Th�ng tin v? service hi?n th? tr�n Eureka dashboard
+  app:
+    name: "gatewayserver"
+    description: "Bank Gateway Server Application Microservices"
+    version: "1.0.0"
+
+logging:
+  level:
+    com:
+      didan:
+        microservices:
+          gatewaysever: debug # Log c�c th�ng tin debug c?a Gateway Server
+
+## Circuit Breaker
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-size: 10 # So luong request ma circuit breaker se kiem tra de xem service co bi loi hay khong
+        permitted-number-of-calls-in-half-open-state: 2 # So luong request cho phep khi service dang trong trang thai half-open, de kiem tra service co hoat dong lai hay khong
+        failure-rate-threshold: 50 # Ty le loi cho phep cua service, neu ty le loi > 50% thi circuit breaker OPEN
+        wait-duration-in-open-state:
+          seconds: 10 # Thoi gian cho phep service chuyen sang HALF-OPEN de kiem tra lai service tu khi circuit breaker chuyen sang OPEN
+
+# C?u h�nh ? Config Server
+#server:
+#  port: 8072
+#
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#  client:
+#    fetch-registry: true
+#    register-with-eureka: true
+#    service-url:
+#      defaultZone: http://localhost:8070/eureka/
