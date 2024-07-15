@@ -9,10 +9,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.circuitbreaker.resilience4j.ReactiveResilience4JCircuitBreakerFactory;
 import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JConfigBuilder;
 import org.springframework.cloud.client.circuitbreaker.Customizer;
+import org.springframework.cloud.gateway.filter.ratelimit.KeyResolver;
+import org.springframework.cloud.gateway.filter.ratelimit.RedisRateLimiter;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
+import reactor.core.publisher.Mono;
 
 @SpringBootApplication
 public class GatewayseverApplication {
@@ -44,7 +47,9 @@ public class GatewayseverApplication {
                 ))
             .uri("lb://LOANS"))
         .route(p -> p.path("/didan/cards/**")
-            .filters(f -> f.rewritePath("/didan/cards/(?<remaining>.*)", "/${remaining}"))
+            .filters(f -> f.rewritePath("/didan/cards/(?<remaining>.*)", "/${remaining}")
+                .requestRateLimiter(config -> config.setRateLimiter(redisRateLimiter())
+                    .setKeyResolver(userKeyResolver())))
             .uri("lb://CARDS"))
         .build();
   }
@@ -56,6 +61,25 @@ public class GatewayseverApplication {
         .circuitBreakerConfig(CircuitBreakerConfig.ofDefaults()) // Cấu hình mặc định cho tất cả các chức năng
         .timeLimiterConfig(TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(4)).build()) // Chỉ thay đổi cấu hình timeout response time là 4s so với mặc định 1s
         .build());
+  }
+
+  // Rate Limiter
+  @Bean
+  public RedisRateLimiter redisRateLimiter() {
+    return new RedisRateLimiter(1, 1, 1);
+    // param 1 - defaultReplenishRate: số lần request được phép thực hiện (số lượng tokens được thêm vào thùng bucket) trong 1s (cho biết tốc độ lấp đầy bucket)
+    // param 2 - defaultBurstCapacity: số lượng tokens tối đa mà bucket có thể chứa (cho biết dung lượng của bucket), (nếu bằng 0 thì sẽ không có request nào được phép truy cập)
+    // param 3 - defaultRequestedTokens: giá mà mỗi 1 request phải trả để truy cập vào hệ thống (mặc định là 1 tokens),
+    // tokens sẽ được lấy từ bucket đã được định size ở burstCapacity, cứ sau 1s thì burstCapacity sẽ được thêm số tokens theo replenishRate
+    // Ví dụ: param 1 = 1, param 2 = 60, param 3 = 60 => Khi thực hiện 1 request, sẽ trừ 60 tokens từ bucket, sau 1s thì bucket sẽ thêm 1 tokens => 60s sau mới thực hiện request tiếp theo
+  }
+
+  // Tạo Bean KeyResolver để tạo chiến lược rate limiter, ví dụ theo user
+  @Bean
+  public KeyResolver userKeyResolver() {
+    return exchange -> Mono.justOrEmpty(exchange.getRequest().getHeaders().getFirst("user")) // Lấy ra user từ headers, tạo chiến lược rate limiter theo user
+        .defaultIfEmpty("annoymous"); // Nếu không có user thì mặc định là annoymous (không xác định)
+    // Dùng Mono vì trong Gateway là Reactor, mọi thứ đều là bất đồng bộ, Mono giúp xử lý bất đồng bộ và trả về một giá trị
   }
 
 }
