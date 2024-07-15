@@ -6,6 +6,7 @@ import com.didan.microservices.accounts.dto.CustomerDto;
 import com.didan.microservices.accounts.dto.ErrorDto;
 import com.didan.microservices.accounts.dto.ResponseDto;
 import com.didan.microservices.accounts.service.IAccountsService;
+import io.github.resilience4j.retry.annotation.Retry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -190,11 +191,18 @@ public class AccountsController {
           )
       }
   )
+  @Retry(name = "getVersion", fallbackMethod = "getVersionFallback")
   @GetMapping("build-info")
   public ResponseEntity<? super String> getVersion() {
     return ResponseEntity
         .status(HttpStatus.OK)
         .body(buildVersion);
+  }
+
+  public ResponseEntity<? super String> getVersionFallback(Throwable throwable) {
+    return ResponseEntity
+        .status(HttpStatus.OK)
+        .body("0.9");
   }
 
   @Operation(
@@ -214,6 +222,7 @@ public class AccountsController {
           )
       }
   )
+
   @GetMapping("java-version")
   public ResponseEntity<? super String> getJavaVersion() {
     return ResponseEntity

@@ -26,8 +26,7 @@ spring:
       enabled: true # Cho phép sử dụng circuit breaker cho Feign client
 
 ## Circuit Breaker Configuration
-resilience4j:
- circuitbreaker:
+resilience4j.circuitbreaker:
   configs:
    default:
     sliding-window-size: 10 # So luong request ma circuit breaker se kiem tra de xem service co bi loi hay khong
@@ -91,3 +90,13 @@ logging:
    didan:
     microservices:
      accounts: debug # Log các thông tin debug của Accouns Service
+
+## Cấu hình Retry Pattern ở chế độ mặc định cho tất cả fallback method retry
+resilience4j.retry:
+ configs:
+  default:
+   max-attempts: 3 # Số lần thử lại khi gọi service bị lỗi
+   wait-duration:
+    nanos: 500 # Thời gian chờ giữa các lần thử lại (500 nanos = 0.5s)
+   enable-exponential-backoff: true # Cho phép sử dụng exponential backoff, cấp số nhân sau mỗi lần thử lại
+   exponential-backoff-multiplier: 2.0 # Cấp số nhân sau mỗi lần thử lại (2.0 = 2 lần)
