@@ -36,8 +36,12 @@ public class CustomerDetailsService implements ICustomerDetailsService{
     customerDetailsDto.setAccountsDto(AccountsMapper.mapToAccountsDto(accounts, new AccountsDto()));
     ResponseEntity<LoansDto> loansDtoResponseEntity = loansFeignClient.fetchLoanDetails(correlationId, mobileNumber);
     ResponseEntity<CardsDto> cardsDtoResponseEntity = cardsFeignClient.fetchCardDetails(correlationId, mobileNumber);
-    customerDetailsDto.setLoansDto(loansDtoResponseEntity.getBody()); // Gọi đến Microservices loans để lấy thông tin khoản vay của khách hàng
-    customerDetailsDto.setCardsDto(cardsDtoResponseEntity.getBody()); // Gọi đến Microservices cards để lấy thông tin thẻ của khách hàng
+    if (loansDtoResponseEntity != null) {
+      customerDetailsDto.setLoansDto(loansDtoResponseEntity.getBody()); // Gọi đến Microservices loans để lấy thông tin khoản vay của khách hàng
+    }
+    if (cardsDtoResponseEntity != null) {
+      customerDetailsDto.setCardsDto(cardsDtoResponseEntity.getBody()); // Gọi đến Microservices cards để lấy thông tin thẻ của khách hàng
+    }
     return customerDetailsDto;
   }
 }

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient("loans") // Gọi đến Microservices có name là loans, hiển thị ở Eureka Server
+@FeignClient(name = "loans", fallback = LoansFallback.class) // Gọi đến Microservices có name là loans, hiển thị ở Eureka Server, nếu không gọi được thì fallback sẽ được gọi
 public interface LoansFeignClient { // Chỉ là Interface, không cần implement
   // Chỉ cần khai báo abstract method, và có signature giống với function cần gọi ở Controller loans
   @GetMapping(value = "/api/fetch", consumes = MediaType.APPLICATION_JSON_VALUE) // Api phải giống với API ở Controller loans
