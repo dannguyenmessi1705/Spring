@@ -100,3 +100,7 @@ resilience4j.retry:
     nanos: 500 # Thời gian chờ giữa các lần thử lại (500 nanos = 0.5s)
    enable-exponential-backoff: true # Cho phép sử dụng exponential backoff, cấp số nhân sau mỗi lần thử lại
    exponential-backoff-multiplier: 2.0 # Cấp số nhân sau mỗi lần thử lại (2.0 = 2 lần)
+   ignore-exceptions:
+     - java.lang.NullPointerException # Bỏ qua exception nếu gặp exception này, sẽ nhảy vào fallback method luôn mà không thử lại
+   retry-exceptions:
+     - java.util.concurrent.TimeoutException # Sẽ thử lại nếu gặp exception này (TimeoutException)
