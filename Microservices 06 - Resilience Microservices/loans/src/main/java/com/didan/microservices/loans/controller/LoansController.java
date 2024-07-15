@@ -254,6 +254,7 @@ public class LoansController {
   )
   @GetMapping("contact-info")
   public ResponseEntity<? super String> getContactInfo() {
+    logger.info("Retry");
     return ResponseEntity
         .status(HttpStatus.OK)
         .body(contactInfoDto);
