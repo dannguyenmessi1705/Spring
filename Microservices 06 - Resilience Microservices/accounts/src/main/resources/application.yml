@@ -104,3 +104,11 @@ resilience4j.retry:
      - java.lang.NullPointerException # Bỏ qua exception nếu gặp exception này, sẽ nhảy vào fallback method luôn mà không thử lại
    retry-exceptions:
      - java.util.concurrent.TimeoutException # Sẽ thử lại nếu gặp exception này (TimeoutException)
+
+## Cấu hình Rate Limiter cho service ở chế độ chỉ cho method name là "getJavaVersion"
+resilience4j.ratelimiter:
+ instances:
+  getJavaVersion:
+   limit-for-period: 1 # Số lần request cho phép trong 1 khoảng thời gian
+   limit-refresh-period: 5000 # Khoảng thời gian reset lại số lần request cho phép (5s)
+   timeout-duration: 1000 # Thời gian chờ cho mỗi request (1s), nếu request không trả về kết quả trong thời gian này, sẽ nhảy về fallback method

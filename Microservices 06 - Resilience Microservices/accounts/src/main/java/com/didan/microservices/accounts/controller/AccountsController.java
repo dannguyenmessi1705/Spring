@@ -6,6 +6,7 @@ import com.didan.microservices.accounts.dto.CustomerDto;
 import com.didan.microservices.accounts.dto.ErrorDto;
 import com.didan.microservices.accounts.dto.ResponseDto;
 import com.didan.microservices.accounts.service.IAccountsService;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -223,11 +224,17 @@ public class AccountsController {
       }
   )
 
+  @RateLimiter(name = "getJavaVersion", fallbackMethod = "getJavaVersionFallback")
   @GetMapping("java-version")
   public ResponseEntity<? super String> getJavaVersion() {
     return ResponseEntity
         .status(HttpStatus.OK)
         .body(env.getProperty("JAVA_HOME"));
+  }
+  public ResponseEntity<? super String> getJavaVersionFallback(Throwable throwable) {
+    return ResponseEntity
+        .status(HttpStatus.OK)
+        .body(null);
   }
 
 
