@@ -9,6 +9,9 @@ spring:
         locator:
           enabled: false # Cho ph�p Gateway Server s? d?ng Eureka ?? t�m ki?m, ??nh tuy?n c�c service
           lower-case-service-id: true # Chuy?n t�n service th�nh ch? th??ng, tr�nh l?i khi g?i service
+      httpclient:
+        connect-timeout: 10000 # Thoi gian toi da de ket noi toi service
+        response-timeout: 2s # Thoi gian toi da de nhan phan hoi tu service
 
 management:
   endpoints:
