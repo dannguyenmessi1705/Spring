@@ -1,9 +1,14 @@
 package com.didan.microservices.gatewaysever;
 
+import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig;
+import io.github.resilience4j.timelimiter.TimeLimiterConfig;
 import java.time.Duration;
 import java.time.LocalTime;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.circuitbreaker.resilience4j.ReactiveResilience4JCircuitBreakerFactory;
+import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JConfigBuilder;
+import org.springframework.cloud.client.circuitbreaker.Customizer;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
@@ -42,6 +47,15 @@ public class GatewayseverApplication {
             .filters(f -> f.rewritePath("/didan/cards/(?<remaining>.*)", "/${remaining}"))
             .uri("lb://CARDS"))
         .build();
+  }
+
+  // Custom circuit breaker với response time (Mặc định là 1s)
+  @Bean
+  public Customizer<ReactiveResilience4JCircuitBreakerFactory> defaultCustomizer() {
+    return factory -> factory.configureDefault(id -> new Resilience4JConfigBuilder(id)
+        .circuitBreakerConfig(CircuitBreakerConfig.ofDefaults()) // Cấu hình mặc định cho tất cả các chức năng
+        .timeLimiterConfig(TimeLimiterConfig.custom().timeoutDuration(Duration.ofSeconds(4)).build()) // Chỉ thay đổi cấu hình timeout response time là 4s so với mặc định 1s
+        .build());
   }
 
 }
