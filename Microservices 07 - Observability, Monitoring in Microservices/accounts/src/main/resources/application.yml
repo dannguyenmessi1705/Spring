@@ -61,6 +61,9 @@ management:
  info:
    env:
     enabled: true # Cho phép dùng endpoint /actuator/info để xem thông tin về service
+ metrics:
+  tags:
+   application: ${spring.application.name} # Nhóm metrics theo tên service để dễ quản lý
 
 ## Cấu hình endpoint /shutdown cho service
 endpoints:

@@ -1,0 +1,29 @@
+global: # Cấu hình chung cho tất cả các service
+  scrape_interval:     5s # Thời gian để Prometheus lấy thông số metrics từ các service (5s)
+  evaluation_interval: 5s # Thời gian để Prometheus đánh giá các thông số metrics (5s)
+
+scrape_configs: # Cấu hình cho việc scrape metrics từ các service
+  - job_name: 'accounts' # Tên của service (Thường trùng với tên của service spring.application.name)
+    metrics_path: '/actuator/prometheus' # Endpoint để lấy metrics, mặc định là /actuator/prometheus sau khi cấu hình spring-boot-starter-actuator và micrometer-registry-prometheus
+    static_configs: # Cấu hình cho việc scrape metrics từ
+      - targets: [ 'accounts:8080' ] # Địa chỉ của service, dạng <tên-service>:<port-service>, do sử dụng docker-compose, join chung 1 mạng nên sử dụng tên của service để truy cập thay vì localhost
+  - job_name: 'loans'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'loans:8090' ]
+  - job_name: 'cards'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'cards:9000' ]
+  - job_name: 'gatewayserver'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'gatewayserver:8072' ]
+  - job_name: 'eurekaserver'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'eurekaserver:8070' ]
+  - job_name: 'configserver'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'configserver:8071' ]

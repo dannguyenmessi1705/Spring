@@ -30,3 +30,6 @@ management:
     health:
       probes:
         enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name} # Nhóm metrics theo tên service để dễ quản lý

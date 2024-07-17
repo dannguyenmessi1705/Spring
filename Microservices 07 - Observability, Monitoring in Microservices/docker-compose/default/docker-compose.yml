@@ -90,6 +90,16 @@ services:
     networks:
       - didan
 
+  prometheus:
+    image: prom/prometheus:v2.50.1 # Sử dụng image của Prometheus
+    container_name: prometheus # Tên của container
+    ports:
+      - "9090:9090" # Port để truy cập vào Prometheus
+    volumes:
+      - ../observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml # Mount file cấu hình vào container
+    networks:
+      - didan # Sử dụng network didan join chung với các service khác
+
   grafana: # Service Grafana dùng để hiển thị dữ liệu từ Loki và xử lý dữ liệu từ Alloy
     image: grafana/grafana:latest # Sử dụng image của Grafana
     environment:
@@ -105,7 +115,22 @@ services:
         mkdir -p /etc/grafana/provisioning/datasources
         cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
         apiVersion: 1
+        deleteDatasources:
+          - name: Prometheus
+          - name: Loki
         datasources:
+          - name: Prometheus
+            type: prometheus
+            uid: prometheus
+            url: http://prometheus:9090
+            access: proxy
+            orgId: 1
+            basicAuth: false
+            isDefault: false
+            version: 1
+            editable: true
+            jsonData:
+              httpMethod: GET
           - name: Loki
             type: loki
             access: proxy
@@ -307,34 +332,6 @@ services:
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
 
-  loans1:
-    image: "dannguyenmessi/loans:v1"
-    container_name: loans-ms1
-    ports:
-      - "8091:8090"
-    healthcheck:
-      test: "curl --fail --silent localhost:8090/actuator/health/readiness | grep UP || exit 1"
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 10s
-    depends_on:
-      configserver:
-        condition: service_healthy
-      eurekaserver:
-        condition: service_healthy
-    deploy:
-      resources:
-        limits:
-          memory: 700m
-    networks:
-      - didan
-    environment:
-      SPRING_APPLICATION_NAME: "loans"
-      SPRING_PROFILES_ACTIVE: default
-      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
-
   cards:
     image: "dannguyenmessi/cards:v1"
     container_name: cards-ms
@@ -384,8 +381,6 @@ services:
       accounts:
         condition: service_healthy
       loans:
-        condition: service_healthy
-      loans1:
         condition: service_healthy
       cards:
         condition: service_healthy

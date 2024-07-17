@@ -30,6 +30,9 @@ management:
   info:
     env:
       enabled: true # Cho ph�p d�ng endpoint /actuator/info ?? xem th�ng tin v? service
+  metrics:
+    tags:
+      application: ${spring.application.name} # Nhóm metrics theo tên service để dễ quản lý
 
 info: # Th�ng tin v? service hi?n th? tr�n Eureka dashboard
   app:
