@@ -1,0 +1,114 @@
+server:
+ port: 8080
+spring:
+ application:
+  name: "accounts"
+ datasource:
+  url: jdbc:h2:mem:testdb
+  driver-class-name: org.h2.Driver
+  username: sa
+  password: ''
+ h2:
+  console:
+   enabled: true
+ jpa:
+  database-platform: org.hibernate.dialect.H2Dialect
+  hibernate:
+   ddl-auto: update
+  show-sql: true
+ profiles:
+  active: 'prod'
+ config:
+  import: "optional:configserver:http://localhost:8071"
+ cloud:
+   openfeign:
+     circuitbreaker:
+      enabled: true # Cho phép sử dụng circuit breaker cho Feign client
+
+## Circuit Breaker Configuration
+resilience4j.circuitbreaker:
+  configs:
+   default:
+    sliding-window-size: 10 # So luong request ma circuit breaker se kiem tra de xem service co bi loi hay khong
+    permitted-number-of-calls-in-half-open-state: 2 # So luong request cho phep khi service dang trong trang thai half-open, de kiem tra service co hoat dong lai hay khong
+    failure-rate-threshold: 50 # Ty le loi cho phep cua service, neu ty le loi > 50% thi circuit breaker OPEN
+    wait-duration-in-open-state:
+     seconds: 10 # Thoi gian cho phep service chuyen sang HALF-OPEN de kiem tra lai service tu khi circuit breaker chuyen sang OPEN
+
+springdoc:
+ api-docs:
+  path: /api-docs
+ swagger-ui:
+  path: /swagger-ui
+
+## Chúng ta cần đăng ký và khai báo endpoint để cho phép Eureka Server kiểm tra sức khỏe của service cũng như để shutdown service 1 cách an toàn, tránh shutdown đột ngột như cách bấm nút tắt máy
+management:
+ endpoints:
+  web:
+   exposure:
+    include: "*"
+  health:
+   readiness-state:
+    enabled: true
+   liveness-state:
+    enabled: true
+ endpoint:
+   shutdown:
+    enabled: true # Cho phép dùng endpoint /actuator/shutdown để tắt service mà không cần tắt container
+   health:
+     probes:
+      enabled: true
+ info:
+   env:
+    enabled: true # Cho phép dùng endpoint /actuator/info để xem thông tin về service
+
+## Cấu hình endpoint /shutdown cho service
+endpoints:
+ shutdown:
+  enabled: true # Cho phép dùng endpoint /shutdown để tắt service mà không cần tắt container
+
+## Cấu hình Eureka client
+eureka:
+ instance:
+  prefer-ip-address: true # Các service sẽ đăng ký với Eureka dùng IP thay vì dùng dns hoặc hostname
+ client:
+  fetch-registry: true # Service này sẽ fetch thông tin của các service khác từ Eureka server
+  register-with-eureka: true # Service này sẽ đăng ký với Eureka server
+  service-url:
+    defaultZone: http://localhost:8070/eureka/ # URL của Eureka server
+
+## Thông tin về service hiển thị trên Eureka dashboard
+info:
+  app:
+   name: "accounts"
+   description: "Bank account application"
+   version: "1.0.0"
+
+logging:
+ level:
+  com:
+   didan:
+    microservices:
+     accounts: debug # Log các thông tin debug của Accouns Service
+
+## Cấu hình Retry Pattern ở chế độ mặc định cho tất cả fallback method retry
+resilience4j.retry:
+ configs:
+  default:
+   max-attempts: 3 # Số lần thử lại khi gọi service bị lỗi
+   wait-duration:
+    nanos: 500 # Thời gian chờ giữa các lần thử lại (500 nanos = 0.5s)
+   enable-exponential-backoff: true # Cho phép sử dụng exponential backoff, cấp số nhân sau mỗi lần thử lại
+   exponential-backoff-multiplier: 2.0 # Cấp số nhân sau mỗi lần thử lại (2.0 = 2 lần)
+   ignore-exceptions:
+     - java.lang.NullPointerException # Bỏ qua exception nếu gặp exception này, sẽ nhảy vào fallback method luôn mà không thử lại
+   retry-exceptions:
+     - java.util.concurrent.TimeoutException # Sẽ thử lại nếu gặp exception này (TimeoutException)
+
+## Cấu hình Rate Limiter cho service ở chế độ chỉ cho method name là "getJavaVersion"
+resilience4j.ratelimiter:
+ instances:
+  getJavaVersion:
+   limit-for-period: 1 # Số lần request cho phép trong 1 khoảng thời gian
+   limit-refresh-period: 5000 # Khoảng thời gian reset lại số lần request cho phép (5s)
+   timeout-duration: 1000 # Thời gian chờ cho mỗi request (1s), nếu request không trả về kết quả trong thời gian này, sẽ nhảy về fallback method
