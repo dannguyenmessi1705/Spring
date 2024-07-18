@@ -31,7 +31,7 @@ logging:
         microservices:
           eurekaserver: debug # Log các thông tin debug của Erureka Server
   pattern:
-    level: "%5p [${spring.application.name}, %X{trace_id}, %X{span_id}]"
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
 
 ## Config ở Spring Cloud Config Server
 #server:

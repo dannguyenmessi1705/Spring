@@ -41,4 +41,4 @@ logging:
         microservices:
           configserver: debug # Log các thông tin debug của Config Server Service
   pattern:
-    level: "%5p [${spring.application.name}, %X{trace_id}, %X{span_id}]"
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"

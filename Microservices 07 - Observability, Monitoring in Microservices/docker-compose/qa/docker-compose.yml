@@ -90,6 +90,28 @@ services:
     networks:
       - didan
 
+  prometheus:
+    image: prom/prometheus:v2.50.1 # Sử dụng image của Prometheus
+    container_name: prometheus # Tên của container
+    ports:
+      - "9090:9090" # Port để truy cập vào Prometheus
+    volumes:
+      - ../observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml # Mount file cấu hình vào container
+    networks:
+      - didan # Sử dụng network didan join chung với các service khác
+
+  tempo:
+    image: grafana/tempo
+    container_name: tempo
+    command: -config.file /etc/tempo-config.yml
+    ports:
+      - "3110:3100" # Port để truy cập vào Tempo, chú ý map port phải không trùng với port của các service khác
+      - "4317:4317" # Port để lưu trữ Traces của Microservices trong Tempo
+    volumes:
+      - ../observability/tempo/tempo-config.yml:/etc/tempo-config.yml # Mount file cấu hình vào container
+    networks:
+      - didan # Phải join chung network với các service khác
+
   grafana: # Service Grafana dùng để hiển thị dữ liệu từ Loki và xử lý dữ liệu từ Alloy
     image: grafana/grafana:latest # Sử dụng image của Grafana
     environment:
@@ -105,13 +127,51 @@ services:
         mkdir -p /etc/grafana/provisioning/datasources
         cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
         apiVersion: 1
+        deleteDatasources:
+          - name: Prometheus
+          - name: Tempo
+          - name: Loki
         datasources:
+          - name: Prometheus
+            type: prometheus
+            uid: prometheus
+            url: http://prometheus:9090
+            access: proxy
+            orgId: 1
+            basicAuth: false
+            isDefault: false
+            version: 1
+            editable: true
+            jsonData:
+              httpMethod: GET
+          - name: Tempo
+            type: tempo
+            uid: tempo
+            url: http://tempo:3100
+            access: proxy
+            orgId: 1
+            basicAuth: false
+            isDefault: false
+            version: 1
+            editable: true
+            jsonData:
+              httpMethod: GET
+              serviceMap:
+                datasourceUid: 'prometheus'
           - name: Loki
             type: loki
+            uid: loki
             access: proxy
+            orgId: 1
+            editable: true
             url: http://gateway:3100
             jsonData:
               httpHeaderName1: "X-Scope-OrgID"
+              derivedFields:
+                - datasourceUid: tempo
+                  matcherRegex: "\\[.+,(.+),.+\\]"
+                  name: TraceID
+                  url: '$${__value.raw}'
             secureJsonData:
               httpHeaderValue1: "tenant1"
         EOF
@@ -215,14 +275,20 @@ services:
       - "8071:8071"
     healthcheck:
       test: "curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
-      interval: 10s
+      interval: 20s
       timeout: 5s
-      retries: 10
+      retries: 20
       start_period: 10s
     deploy:
       resources:
         limits:
           memory: 700m
+    environment:
+      SPRING_APPLICATION_NAME: "configserver"
+      OTEL_SERVICE_NAME: "configserver"
+      JAVA_TOOL_OPTIONS: "-javaagent:/app/libs/opentelemetry-javaagent-2.6.0.jar"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4317
+      OTEL_METRICS_EXPORTER: none
     networks:
       - didan
 
@@ -248,6 +314,10 @@ services:
       - didan
     environment:
       SPRING_APPLICATION_NAME: "eurekaserver"
+      OTEL_SERVICE_NAME: "eurekaserver"
+      JAVA_TOOL_OPTIONS: "-javaagent:/app/libs/opentelemetry-javaagent-2.6.0.jar"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4317
+      OTEL_METRICS_EXPORTER: none
       SPRING_PROFILES_ACTIVE: default
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
 
@@ -278,6 +348,10 @@ services:
       SPRING_PROFILES_ACTIVE: qa
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
+      OTEL_SERVICE_NAME: "accounts"
+      JAVA_TOOL_OPTIONS: "-javaagent:/app/libs/opentelemetry-javaagent-2.6.0.jar"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4317
+      OTEL_METRICS_EXPORTER: none
 
   loans:
     image: "dannguyenmessi/loans:v1"
@@ -306,6 +380,10 @@ services:
       SPRING_PROFILES_ACTIVE: qa
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
+      OTEL_SERVICE_NAME: "loans"
+      JAVA_TOOL_OPTIONS: "-javaagent:/app/libs/opentelemetry-javaagent-2.6.0.jar"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4317
+      OTEL_METRICS_EXPORTER: none
 
   cards:
     image: "dannguyenmessi/cards:v1"
@@ -334,6 +412,10 @@ services:
       SPRING_PROFILES_ACTIVE: qa
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
+      OTEL_SERVICE_NAME: "cards"
+      JAVA_TOOL_OPTIONS: "-javaagent:/app/libs/opentelemetry-javaagent-2.6.0.jar"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4317
+      OTEL_METRICS_EXPORTER: none
 
   gatewayserver:
     image: "dannguyenmessi/gatewaysever:v1"
@@ -352,12 +434,14 @@ services:
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
       SPRING_DATA_REDIS_HOST: redis
+      OTEL_SERVICE_NAME: "gatewayserver"
+      JAVA_TOOL_OPTIONS: "-javaagent:/app/libs/opentelemetry-javaagent-2.6.0.jar"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4317
+      OTEL_METRICS_EXPORTER: none
     depends_on:
       accounts:
         condition: service_healthy
       loans:
-        condition: service_healthy
-      loans1:
         condition: service_healthy
       cards:
         condition: service_healthy
