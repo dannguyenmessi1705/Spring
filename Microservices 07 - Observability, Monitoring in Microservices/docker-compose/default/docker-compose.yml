@@ -124,53 +124,11 @@ services:
       - sh
       - -euc
       - |
-        mkdir -p /etc/grafana/provisioning/datasources
-        cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
-        apiVersion: 1
-        deleteDatasources:
-          - name: Prometheus
-          - name: Tempo
-          - name: Loki
-        datasources:
-          - name: Prometheus
-            type: prometheus
-            uid: prometheus
-            url: http://prometheus:9090
-            access: proxy
-            orgId: 1
-            basicAuth: false
-            isDefault: false
-            version: 1
-            editable: true
-            jsonData:
-              httpMethod: GET
-          - name: Tempo
-            type: tempo
-            uid: tempo
-            url: http://tempo:3100
-            access: proxy
-            orgId: 1
-            basicAuth: false
-            isDefault: false
-            version: 1
-            editable: true
-            jsonData:
-              httpMethod: GET
-              serviceMap:
-                datasourceUid: 'prometheus'
-          - name: Loki
-            type: loki
-            uid: loki
-            url: http://gateway:3100
-            access: proxy
-            jsonData:
-              httpHeaderName1: "X-Scope-OrgID"
-            secureJsonData:
-              httpHeaderValue1: "tenant1"
-        EOF
         /run.sh
     ports:
       - "3000:3000"
+    volumes:
+      - ../observability/grafana/grafana-config.yml:/etc/grafana/provisioning/datasources/datasource.yml # Mount file cấu hình vào container
     healthcheck:
       test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1" ]
       interval: 10s

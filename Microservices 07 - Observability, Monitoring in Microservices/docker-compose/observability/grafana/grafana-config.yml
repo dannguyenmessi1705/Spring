@@ -1,0 +1,50 @@
+apiVersion: 1
+
+deleteDatasources: # Xóa tất cả các datasource trước khi tạo datasource mới
+  - name: Prometheus
+  - name: Loki
+  - name: Tempo
+
+datasources: # Tạo datasource mới
+  - name: Prometheus # Tên datasource
+    type: prometheus # Loại datasource
+    uid: prometheus # UID của datasource
+    url: http://prometheus:9090 # URL của datasource, trùng với tên service trong docker-compose.yml
+    access: proxy # Quyền truy cập
+    orgId: 1 # ID của organization
+    basicAuth: false # Sử dụng basic auth hay không
+    isDefault: false # Đặt datasource này là datasource mặc định hay không
+    version: 1 # Phiên bản của datasource
+    editable: true # Có thể chỉnh sửa datasource hay không
+    jsonData: # Dữ liệu JSON
+      httpMethod: GET # Phương thức HTTP
+  - name: Tempo # Tên datasource
+    type: tempo # Loại datasource
+    uid: tempo
+    url: http://tempo:3100 # URL của Tempo lấy từ service trong docker-compose.yml
+    access: proxy
+    orgId: 1
+    basicAuth: false
+    isDefault: false
+    version: 1
+    editable: true
+    jsonData:
+      httpMethod: GET
+      serviceMap: # Bản đồ dịch vụ của Tempo
+        datasourceUid: 'prometheus' # UID của datasource Prometheus để lấy dữ liệu
+  - name: Loki # Tên datasource
+    type: loki
+    uid: loki
+    access: proxy
+    orgId: 1
+    editable: true
+    url: http://gateway:3100 # URL của Loki lấy từ gateway service trong docker-compose.yml
+    jsonData:
+      httpHeaderName1: "X-Scope-OrgID" # Header name
+      derivedFields: # Trường dữ liệu tạo ra
+        - datasourceUid: tempo # UID của datasource Tempo
+          matcherRegex: "\\[.+,(.+),.+\\]" # Regex để match dữ liệu
+          name: TraceID # Tên trường dữ liệu
+          url: '$${__value.raw}' # URL để lấy dữ liệu từ datasource
+    secureJsonData: # Dữ liệu JSON bảo mật
+      httpHeaderValue1: "tenant1"
