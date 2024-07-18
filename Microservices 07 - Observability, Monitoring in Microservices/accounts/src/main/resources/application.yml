@@ -93,6 +93,8 @@ logging:
    didan:
     microservices:
      accounts: debug # Log các thông tin debug của Accouns Service
+ pattern:
+  level: "%5p [${spring.application.name}, %X{trace_id}, %X{span_id}]"
 
 ## Cấu hình Retry Pattern ở chế độ mặc định cho tất cả fallback method retry
 resilience4j.retry:

@@ -46,6 +46,8 @@ logging:
       didan:
         microservices:
           gatewaysever: debug # Log c�c th�ng tin debug c?a Gateway Server
+  pattern:
+    level: "%5p [${spring.application.name}, %X{trace_id}, %X{span_id}]"
 
 ## Circuit Breaker
 resilience4j:

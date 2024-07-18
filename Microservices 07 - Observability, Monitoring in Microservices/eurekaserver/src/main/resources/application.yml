@@ -24,6 +24,15 @@ management:
     tags:
       application: ${spring.application.name} # Nhóm metrics theo tên service để dễ quản lý
 
+logging:
+  level:
+    com:
+      didan:
+        microservices:
+          eurekaserver: debug # Log các thông tin debug của Erureka Server
+  pattern:
+    level: "%5p [${spring.application.name}, %X{trace_id}, %X{span_id}]"
+
 ## Config ở Spring Cloud Config Server
 #server:
 #  port: 8070
