@@ -1,0 +1,45 @@
+---
+server:
+  http_listen_address: 0.0.0.0 # Địa chỉ IP mà Loki sẽ lắng nghe
+  http_listen_port: 3100 # Cổng mà Loki sẽ lắng nghe
+
+memberlist: # Cấu hình cho gossip
+  join_members: ["read", "write", "backend"] # Các thành viên mà Loki sẽ tham gia vào gossip
+  dead_node_reclaim_time: 30s # Thời gian mà Loki sẽ chờ để xóa một node đã chết
+  gossip_to_dead_nodes_time: 15s # Thời gian mà Loki sẽ gửi gossip đến các node đã chết
+  left_ingesters_timeout: 30s # Thời gian mà Loki sẽ chờ để xóa một ingester đã rời bỏ
+  bind_addr: ['0.0.0.0'] # Địa chỉ IP mà Loki sẽ bind
+  bind_port: 7946 # Cổng mà Loki sẽ bind
+  gossip_interval: 2s # Thời gian mà Loki sẽ gửi gossip
+
+schema_config: # Cấu hình cho schema
+  configs:
+    - from: 2021-08-01 # Thời gian bắt đầu của schema
+      store: tsdb # Lưu trữ dữ liệu
+      object_store: s3 # Lưu trữ dữ liệu trên S3
+      schema: v13 # Phiên bản của schema
+      index:
+        prefix: index_ # Tiền tố của index
+        period: 24h # Chu kỳ của index
+common: # Cấu hình chung
+  path_prefix: /loki # Tiền tố của path cho các API
+  replication_factor: 1 # Số lượng replica
+  compactor_address: http://backend:3100 # Địa chỉ của compactor để gửi dữ liệu
+  storage: # Cấu hình cho storage lưu trữ dữ liệu
+    s3: # Lưu trữ dữ liệu trên S3
+      endpoint: minio:9000 # Địa chỉ của S3 endpoint, sử dụng MinIO, sẽ config trong docker-compose
+      insecure: true # Sử dụng giao thức HTTP thay vì HTTPS
+      bucketnames: loki-data # Tên của bucket lưu trữ dữ liệu
+      access_key_id: loki # Access key ID của S3 sẽ config trong docker-compose
+      secret_access_key: supersecret # Secret access key của S3 sẽ config trong docker-compose
+      s3forcepathstyle: true # Sử dụng path style URL với mục đích tương thích với MinIO
+  ring: # Cấu hình cho ring
+    kvstore:
+      store: memberlist # Lưu trữ thông tin của ring trên memberlist
+ruler:
+  storage:
+    s3:
+      bucketnames: loki-ruler # Tên của bucket lưu trữ dữ liệu cho ruler
+
+compactor:
+  working_directory: /tmp/compactor # Thư mục làm việc của compactor dùng để lưu trữ dữ liệu tạm thời
