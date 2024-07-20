@@ -1,0 +1,412 @@
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:25.0.2
+    container_name: keycloak
+    ports:
+      - "7080:8080"
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    command: "start-dev"
+    networks:
+      - didan
+
+  redis:
+    image: "redis"
+    container_name: redis-ms
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"] # Kiểm tra sức khỏe của Redis Server bằng cách gửi lệnh ping
+      interval: 10s
+      retries: 10
+    networks:
+      - didan
+
+  read: # Service read của Loki dùng để đọc dữ liệu từ các state của microservices
+    image: grafana/loki:3.0.0 # Sử dụng image của Loki
+    command: "-config.file=/etc/loki/config.yaml -target=read" # Command để chạy Loki
+    ports:
+      - 3101:3100
+      - 7946
+      - 9095
+    volumes:
+      - ../observability/loki/loki-config.yaml:/etc/loki/config.yaml # Mount file cấu hình vào container
+    depends_on:
+      - minio # Phụ thuộc vào service MinIO, một service lưu trữ dữ liệu
+    healthcheck: # Kiểm tra sức khỏe của service
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3100/ready || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: &loki-dns # Sử dụng & để gộp những dòng cấu hình này lại vào biến loki-dns
+      didan: # Sử dụng network didan
+        aliases: # Alias cho network
+          - loki # Alias loki
+
+  write: # Service write của Loki dùng để ghi dữ liệu từ các state của microservices
+    image: grafana/loki:3.0.0 # Sử dụng image của Loki
+    command: "-config.file=/etc/loki/config.yaml -target=write" # Command để chạy Loki
+    ports:
+      - 3102:3100
+      - 7946
+      - 9095
+    volumes:
+      - ../observability/loki/loki-config.yaml:/etc/loki/config.yaml # Mount file cấu hình vào container
+    healthcheck: # Kiểm tra sức khỏe của service
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3100/ready || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      - minio # Phụ thuộc vào service MinIO, một service lưu trữ dữ liệu
+    networks:
+      <<: *loki-dns # Sử dụng biến loki-dns để gán network
+
+  alloy: # Service alloy của Grafana dùng để xử lý dữ liệu từ Loki
+    image: grafana/alloy-dev:latest # Sử dụng image của Alloy
+    volumes:
+      - ../observability/alloy/alloy-local-config.yaml:/etc/alloy/config.alloy:ro # Mount file cấu hình vào container với quyền read-only
+      - /var/run/docker.sock:/var/run/docker.sock # Mount Docker socket vào container để Alloy có thể truy cập vào Docker
+    command:  run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy # Command để chạy Alloy
+    ports:
+      - 12345:12345
+    depends_on:
+      - gateway # Phụ thuộc vào service gateway, điều hướng traffic hệ thống ghi logs
+    networks:
+      - didan # Sử dụng network didan
+
+  minio: # Service MinIO dùng để lưu trữ dữ liệu của Loki
+    image: minio/minio # Sử dụng image của MinIO
+    entrypoint: # Command để chạy MinIO
+      - sh
+      - -euc
+      - |
+        mkdir -p /data/loki-data && \
+        mkdir -p /data/loki-ruler && \
+        minio server /data
+    environment:
+      - MINIO_ROOT_USER=loki # Username của MinIO
+      - MINIO_ROOT_PASSWORD=supersecret # Password của MinIO
+      - MINIO_PROMETHEUS_AUTH_TYPE=public # Cấu hình cho Prometheus
+      - MINIO_UPDATE=off # Tắt cập nhật tự động
+    ports:
+      - 9000
+    volumes:
+      - ./.data/minio:/data # Mount volume để lưu trữ dữ liệu
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      interval: 15s
+      timeout: 20s
+      retries: 5
+    networks:
+      - didan
+
+  prometheus:
+    image: prom/prometheus:v2.50.1 # Sử dụng image của Prometheus
+    container_name: prometheus # Tên của container
+    ports:
+      - "9090:9090" # Port để truy cập vào Prometheus
+    volumes:
+      - ../observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml # Mount file cấu hình vào container
+    networks:
+      - didan # Sử dụng network didan join chung với các service khác
+
+  tempo:
+    image: grafana/tempo:2.4.2
+    container_name: tempo
+    command: -config.file /etc/tempo-config.yml
+    ports:
+      - "3110:3100" # Port để truy cập vào Tempo, chú ý map port phải không trùng với port của các service khác
+      - "4317:4317" # Port để lưu trữ Traces của Microservices trong Tempo
+    volumes:
+      - ../observability/tempo/tempo-config.yml:/etc/tempo-config.yml # Mount file cấu hình vào container
+    networks:
+      - didan # Phải join chung network với các service khác
+
+  grafana: # Service Grafana dùng để hiển thị dữ liệu từ Loki và xử lý dữ liệu từ Alloy
+    image: grafana/grafana:latest # Sử dụng image của Grafana
+    environment:
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning # Cấu hình cho provisioning
+      - GF_AUTH_ANONYMOUS_ENABLED=true # Bật chế độ ẩn danh
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin # Phân quyền cho ẩn danh
+    depends_on:
+      - gateway # Phụ thuộc vào service gateway, điều hướng traffic hệ thống ghi logs
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        /run.sh
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../observability/grafana/grafana-config.yml:/etc/grafana/provisioning/datasources/datasource.yml # Mount file cấu hình vào container
+    healthcheck:
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - didan
+
+  backend: # Service backend của Grafana dùng để xử lý dữ liệu từ Loki
+    image: grafana/loki:3.0.0 # Sử dụng image của Loki
+    volumes:
+      - ../observability/loki/loki-config.yaml:/etc/loki/config.yaml # Mount file cấu hình vào container
+    ports:
+      - "3100"
+      - "7946"
+    command: "-config.file=/etc/loki/config.yaml -target=backend -legacy-read-mode=false" # Command để chạy backend
+    depends_on:
+      - gateway # Phụ thuộc vào service gateway, điều hướng traffic hệ thống ghi logs
+    networks:
+      - didan
+
+  gateway: # Service gateway của Grafana dùng để điều hướng traffic hệ thống ghi logs
+    image: nginx:latest # Sử dụng image của Nginx
+    depends_on:
+      - read # Phụ thuộc vào service read, dùng để đọc dữ liệu từ các state của microservices
+      - write # Phụ thuộc vào service write, dùng để ghi dữ liệu từ các state của microservices
+    entrypoint:
+      - sh
+      - -euc
+      - |
+        cat <<EOF > /etc/nginx/nginx.conf
+        user  nginx;
+        worker_processes  5;  ## Default: 1
+
+        events {
+          worker_connections   1000;
+        }
+
+        http {
+          resolver 127.0.0.11;
+
+          server {
+            listen             3100;
+
+            location = / {
+              return 200 'OK';
+              auth_basic off;
+            }
+
+            location = /api/prom/push {
+              proxy_pass       http://write:3100\$$request_uri;
+            }
+
+            location = /api/prom/tail {
+              proxy_pass       http://read:3100\$$request_uri;
+              proxy_set_header Upgrade \$$http_upgrade;
+              proxy_set_header Connection "upgrade";
+            }
+
+            location ~ /api/prom/.* {
+              proxy_pass       http://read:3100\$$request_uri;
+            }
+
+            location = /loki/api/v1/push {
+              proxy_pass       http://write:3100\$$request_uri;
+            }
+
+            location = /loki/api/v1/tail {
+              proxy_pass       http://read:3100\$$request_uri;
+              proxy_set_header Upgrade \$$http_upgrade;
+              proxy_set_header Connection "upgrade";
+            }
+
+            location ~ /loki/api/.* {
+              proxy_pass       http://read:3100\$$request_uri;
+            }
+          }
+        }
+        EOF
+        /docker-entrypoint.sh nginx -g "daemon off;"
+    ports:
+      - "3100:3100"
+    healthcheck: # Kiểm tra sức khỏe của service
+      test: ["CMD", "service", "nginx", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - didan
+
+  configserver:
+    image: "dannguyenmessi/configserver:v1"
+    container_name: configserver-ms
+    healthcheck:
+      test: "curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    environment:
+      SPRING_APPLICATION_NAME: "configserver"
+      OTEL_SERVICE_NAME: "configserver"
+      JAVA_TOOL_OPTIONS: "-javaagent:/app/libs/opentelemetry-javaagent-1.32.0.jar"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4317
+      OTEL_METRICS_EXPORTER: none
+    networks:
+      - didan
+    depends_on:
+      tempo:
+        condition: service_started
+
+  eurekaserver:
+    image: "dannguyenmessi/eurekaserver:v1"
+    container_name: eurekaserver-ms
+    ports:
+      - "8070:8070"
+    depends_on:
+      configserver:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:8070/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - didan
+    environment:
+      SPRING_APPLICATION_NAME: "eurekaserver"
+      OTEL_SERVICE_NAME: "eurekaserver"
+      JAVA_TOOL_OPTIONS: "-javaagent:/app/libs/opentelemetry-javaagent-1.32.0.jar"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4317
+      OTEL_METRICS_EXPORTER: none
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+
+  accounts:
+    image: "dannguyenmessi/accounts:v1"
+    container_name: accounts-ms
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - didan
+    environment:
+      SPRING_APPLICATION_NAME: "accounts"
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
+      OTEL_SERVICE_NAME: "accounts"
+      JAVA_TOOL_OPTIONS: "-javaagent:/app/libs/opentelemetry-javaagent-1.32.0.jar"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4317
+      OTEL_METRICS_EXPORTER: none
+
+  loans:
+    image: "dannguyenmessi/loans:v1"
+    container_name: loans-ms
+    healthcheck:
+      test: "curl --fail --silent localhost:8090/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - didan
+    environment:
+      SPRING_APPLICATION_NAME: "loans"
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
+      OTEL_SERVICE_NAME: "loans"
+      JAVA_TOOL_OPTIONS: "-javaagent:/app/libs/opentelemetry-javaagent-1.32.0.jar"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4317
+      OTEL_METRICS_EXPORTER: none
+
+  cards:
+    image: "dannguyenmessi/cards:v1"
+    container_name: cards-ms
+    healthcheck:
+        test: "curl --fail --silent localhost:9000/actuator/health/readiness | grep UP || exit 1"
+        interval: 10s
+        timeout: 5s
+        retries: 10
+        start_period: 10s
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - didan
+    environment:
+      SPRING_APPLICATION_NAME: "cards"
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
+      OTEL_SERVICE_NAME: "cards"
+      JAVA_TOOL_OPTIONS: "-javaagent:/app/libs/opentelemetry-javaagent-1.32.0.jar"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4317
+      OTEL_METRICS_EXPORTER: none
+
+  gatewayserver:
+    image: "dannguyenmessi/gatewaysever:v1"
+    container_name: gatewayserver-ms
+    ports:
+      - "8072:8072"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - didan
+    environment:
+      SPRING_APPLICATION_NAME: "gatewayserver"
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
+      SPRING_DATA_REDIS_HOST: redis
+      OTEL_SERVICE_NAME: "gatewayserver"
+      JAVA_TOOL_OPTIONS: "-javaagent:/app/libs/opentelemetry-javaagent-1.32.0.jar"
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4317
+      OTEL_METRICS_EXPORTER: none
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI: "http://keycloak:8080/realms/master/protocol/openid-connect/certs"
+    depends_on:
+      accounts:
+        condition: service_healthy
+      loans:
+        condition: service_healthy
+      cards:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+networks:
+  didan:
+    driver: "bridge"

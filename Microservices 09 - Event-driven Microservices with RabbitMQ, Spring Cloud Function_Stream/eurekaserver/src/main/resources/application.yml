@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: "eurekaserver"
+  config:
+    import: optional:configserver:http://localhost:8071
+  profiles:
+    active: "default"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name} # Nhóm metrics theo tên service để dễ quản lý
+
+logging:
+  level:
+    com:
+      didan:
+        microservices:
+          eurekaserver: debug # Log các thông tin debug của Erureka Server
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"
+
+## Config ở Spring Cloud Config Server
+#server:
+#  port: 8070
+#
+#eureka:
+#  instance:
+#    hostname: localhost # Nói cho Eureka Server xem xét địa chỉ IP hoặc tên máy chủ mà nó sẽ sử dụng để truy cập nó
+#  client:
+#    fetch-registry: false # Đặt giá trị này thành false nếu bạn không muốn Eureka Server truy cập vào chính nó, chỉ true với các ứng dụng khác
+#    register-with-eureka: false # Đặt giá trị này thành false nếu bạn không muốn đăng ký với chính mình, chỉ true với các ứng dụng khác
+#    service-url:
+#      defaultZone: http://${eureka.instance.hostname}:${server.port}/euraka/ # Địa chỉ URL mà các ứng dụng khác sẽ sử dụng để truy cập Eureka Server
