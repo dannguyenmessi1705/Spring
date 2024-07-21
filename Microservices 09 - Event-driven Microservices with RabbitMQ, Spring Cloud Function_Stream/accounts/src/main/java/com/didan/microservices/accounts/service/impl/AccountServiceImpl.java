@@ -1,9 +1,13 @@
 package com.didan.microservices.accounts.service.impl;
 
+import com.didan.microservices.accounts.dto.AccountsMsgDto;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 
 import com.didan.microservices.accounts.constant.AccountsConstant;
@@ -24,8 +28,11 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class AccountServiceImpl implements IAccountsService {
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+
 	private final AccountsRepository accountsRepository;
 	private final CustomerRepository customerRepository;
+	private final StreamBridge streamBridge;
 
 	/**
 	 * 
@@ -40,7 +47,8 @@ public class AccountServiceImpl implements IAccountsService {
 		}
 		Customer customer = CustomerMapper.mapToCustomer(customerDto, new Customer());
 		Customer savedCustomer = customerRepository.save(customer);
-		accountsRepository.save(createAccountsFromCustomer(savedCustomer));
+		Accounts savedAccounts = accountsRepository.save(createAccountsFromCustomer(savedCustomer));
+		sendToExchange(savedAccounts, savedCustomer);
 	}
 
 	private Accounts createAccountsFromCustomer(Customer customer) {
@@ -51,6 +59,14 @@ public class AccountServiceImpl implements IAccountsService {
 		long randomAccNumber = 1000000000L + new Random().nextInt(900000000);
 		accounts.setAccountNumber(randomAccNumber);
 		return accounts;
+	}
+
+	private void sendToExchange(Accounts accounts, Customer customer) {
+		var accountsMsgDto = new AccountsMsgDto(accounts.getAccountNumber(), customer.getName(), customer.getEmail(),
+				customer.getMobile()); // Tạo ra một AccountsMsgDto mới với các thông tin từ accounts và customer, Lưu ý kiểu dữ liệu gửi đi phải trùng với dữ liệu mà các Function đang lắng nghe
+		logger.info("Sending Communication request for the details: {}", accountsMsgDto);
+		var result = streamBridge.send("sendCommunication-out-0", accountsMsgDto); // Gửi thông tin đến exchange với tên là sendCommunication-out-0 đã được định nghĩa trong application.properties
+		logger.info("Is the Communication request successfully triggered ? : {}", result);
 	}
 
 	/**
@@ -104,5 +120,19 @@ public class AccountServiceImpl implements IAccountsService {
 		accountsRepository.deleteByCustomerId(customer.getCustomerId());
 		customerRepository.deleteById(customer.getCustomerId());
 		return true;
+	}
+
+	@Override
+	public boolean updateCommunicationStatus(Long accountNumber) {
+		boolean isUpdated = false;
+		if(accountNumber !=null ){
+			Accounts accounts = accountsRepository.findById(accountNumber).orElseThrow(
+					() -> new ResourceNotFoundException("Account", "AccountNumber", accountNumber.toString())
+			);
+			accounts.setCommunicationSw(true);
+			accountsRepository.save(accounts);
+			isUpdated = true;
+		}
+		return  isUpdated;
 	}
 }
