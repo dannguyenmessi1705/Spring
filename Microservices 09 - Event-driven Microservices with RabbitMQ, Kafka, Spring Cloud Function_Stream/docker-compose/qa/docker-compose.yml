@@ -335,8 +335,8 @@ services:
         condition: service_healthy
       eurekaserver:
         condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
+      # rabbitmq:
+      #   condition: service_healthy
     deploy:
       resources:
         limits:
@@ -418,9 +418,9 @@ services:
   messages:
     image: "dannguyenmessi/messages:v1"
     container_name: messages-ms
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
+    # depends_on:
+    #   rabbitmq:
+    #     condition: service_healthy
     networks:
       - didan
     environment:
