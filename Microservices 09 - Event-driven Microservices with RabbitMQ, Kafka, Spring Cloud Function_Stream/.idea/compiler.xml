@@ -7,8 +7,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="eurekaserver" />
+        <module name="gatewaysever" />
+        <module name="cards" />
+        <module name="loans" />
         <module name="messages" />
         <module name="accounts" />
+        <module name="configserver" />
       </profile>
     </annotationProcessing>
   </component>

@@ -1,18 +1,39 @@
 services:
-  rabbitmq:
-    image: rabbitmq:3.13-management
-    container_name: rabbitmq
+  kafka:
+    image: docker.io/bitnami/kafka:3.7 # Sử dụng image bitnami/kafka
     ports:
-      - "5672:5672"
-      - "15672:15672"
-    healthcheck: # Kiểm tra kết nối tới RabbitMQ
-      test: rabbitmq-diagnostics check_port_connectivity # Kiểm tra kết nối tới RabbitMQ
-      interval: 10s # Thời gian kiểm tra
-      timeout: 5s # Thời gian tối đa để kiểm tra
-      retries: 10 # Số lần kiểm tra lại khi thất bại
-      start_period: 5s # Thời gian bắt đầu kiểm tra sau khi Container khởi động
-    networks: # Kết nối mạng
-      - didan # Tên mạng kết nối với các service khác
+      - "9092:9092" # Port kết nối
+    volumes:
+      - ./kafka_data:/bitnami # Lưu trữ dữ liệu của Kafka trên ổ đĩa
+    environment:
+      # KRaft settings
+      - KAFKA_CFG_NODE_ID=0 # Node ID của Kafka Server trong Cluster
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker # Process Roles của Kafka Server trong Cluster (controller, broker)
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093 # Quorum Voters của Kafka Server trong Cluster (0@kafka:9093)
+      # Listeners
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093 # Listener của Kafka Server (PLAINTEXT://:9092, CONTROLLER://:9093)
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://:9092 # Advertised Listener của Kafka Server (PLAINTEXT://:9092)
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT # Listener Security Protocol Map của Kafka Server (CONTROLLER:PLAINTEXT, PLAINTEXT:PLAINTEXT)
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER # Controller Listener Names của Kafka Server (CONTROLLER)
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT # Inter Broker Listener Name của Kafka Server (PLAINTEXT)
+    networks:
+      - didan # Kết nối mạng để join với các service khác
+
+  ## IF USE KAFKA, DISABLE RABBITMQ
+  #  rabbitmq:
+  #    image: rabbitmq:3.13-management
+  #    container_name: rabbitmq
+  #    ports:
+  #      - "5672:5672"
+  #      - "15672:15672"
+  #    healthcheck: # Kiểm tra kết nối tới RabbitMQ
+  #      test: rabbitmq-diagnostics check_port_connectivity # Kiểm tra kết nối tới RabbitMQ
+  #      interval: 10s # Thời gian kiểm tra
+  #      timeout: 5s # Thời gian tối đa để kiểm tra
+  #      retries: 10 # Số lần kiểm tra lại khi thất bại
+  #      start_period: 5s # Thời gian bắt đầu kiểm tra sau khi Container khởi động
+  #    networks: # Kết nối mạng
+  #      - didan # Tên mạng kết nối với các service khác
 
   keycloak:
     image: quay.io/keycloak/keycloak:25.0.2
@@ -331,7 +352,8 @@ services:
       JAVA_TOOL_OPTIONS: "-javaagent:/app/libs/opentelemetry-javaagent-1.32.0.jar"
       OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4317
       OTEL_METRICS_EXPORTER: none
-      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS: kafka:9092
+      #SPRING_RABBITMQ_HOST: rabbitmq
 
   loans:
     image: "dannguyenmessi/loans:v1"
@@ -403,7 +425,8 @@ services:
       - didan
     environment:
       SPRING_APPLICATION_NAME: "messages"
-      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS: kafka:9092
+      #SPRING_RABBITMQ_HOST: rabbitmq
 
   gatewayserver:
     image: "dannguyenmessi/gatewaysever:v1"

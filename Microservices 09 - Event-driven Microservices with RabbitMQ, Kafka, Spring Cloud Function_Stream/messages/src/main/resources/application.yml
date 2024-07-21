@@ -14,9 +14,13 @@ spring:
           group: ${spring.application.name} # Group cua service, dung de phan biet cac service khac nhau
         emailsms-out-0: # Khai bao binding voi quy tac ten la <function-name>-out-<index> (out la output giao tiep voi exchange de gui message den service khac)
           destination: message-sent # Ten exchange ma service nay se gui message den service khac
-  rabbitmq:
-    host: localhost
-    username: guest
-    password: guest
-    port: 5672
-    connection-timeout: 10s
+      kafka:
+        binder:
+          brokers:
+            - localhost:9092 # Dia chi cua Kafka server
+#  rabbitmq:
+#    host: localhost
+#    username: guest
+#    password: guest
+#    port: 5672
+#    connection-timeout: 10s

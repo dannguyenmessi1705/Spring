@@ -88,10 +88,15 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-stream</artifactId>
 		</dependency>
-
+<!--		RABBIT MQ -->
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.cloud</groupId>-->
+<!--			<artifactId>spring-cloud-stream-binder-rabbit</artifactId>-->
+<!--		</dependency>-->
+<!--		KAFKA -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-stream-binder-rabbit</artifactId>
+			<artifactId>spring-cloud-stream-binder-kafka</artifactId>
 		</dependency>
 
 		<dependency>

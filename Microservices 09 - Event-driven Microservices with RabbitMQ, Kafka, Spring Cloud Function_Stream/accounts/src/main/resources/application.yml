@@ -33,12 +33,16 @@ spring:
       updateCommunication-in-0: # Khai bao binding voi quy tac ten la <function-name>-in-<index> (in la input giao tiep voi queue do service khac gui den)
        destination: message-sent # Ten queue ma service nay se nhan message tu service khac
        group: ${spring.application.name} # Group cua service, dung de phan biet cac service khac nhau
- rabbitmq:
-  host: localhost
-  port: 5672
-  username: guest
-  password: guest
-  connection-timeout: 10s
+    kafka:
+     binder:
+      brokers:
+       - localhost:9092 # Dia chi cua Kafka server
+# rabbitmq:
+#  host: localhost
+#  port: 5672
+#  username: guest
+#  password: guest
+#  connection-timeout: 10s
 
 ## Circuit Breaker Configuration
 resilience4j.circuitbreaker:
