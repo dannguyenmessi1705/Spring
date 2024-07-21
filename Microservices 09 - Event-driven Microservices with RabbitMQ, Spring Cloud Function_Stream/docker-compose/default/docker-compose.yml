@@ -1,4 +1,19 @@
 services:
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck: # Kiểm tra kết nối tới RabbitMQ
+      test: rabbitmq-diagnostics check_port_connectivity # Kiểm tra kết nối tới RabbitMQ
+      interval: 10s # Thời gian kiểm tra
+      timeout: 5s # Thời gian tối đa để kiểm tra
+      retries: 10 # Số lần kiểm tra lại khi thất bại
+      start_period: 5s # Thời gian bắt đầu kiểm tra sau khi Container khởi động
+    networks: # Kết nối mạng
+      - didan # Tên mạng kết nối với các service khác
+
   keycloak:
     image: quay.io/keycloak/keycloak:25.0.2
     container_name: keycloak
@@ -299,6 +314,8 @@ services:
         condition: service_healthy
       eurekaserver:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     deploy:
       resources:
         limits:
@@ -314,6 +331,7 @@ services:
       JAVA_TOOL_OPTIONS: "-javaagent:/app/libs/opentelemetry-javaagent-1.32.0.jar"
       OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4317
       OTEL_METRICS_EXPORTER: none
+      SPRING_RABBITMQ_HOST: rabbitmq
 
   loans:
     image: "dannguyenmessi/loans:v1"
@@ -374,6 +392,18 @@ services:
       JAVA_TOOL_OPTIONS: "-javaagent:/app/libs/opentelemetry-javaagent-1.32.0.jar"
       OTEL_EXPORTER_OTLP_ENDPOINT: http://tempo:4317
       OTEL_METRICS_EXPORTER: none
+
+  messages:
+    image: "dannguyenmessi/messages:v1"
+    container_name: messages-ms
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - didan
+    environment:
+      SPRING_APPLICATION_NAME: "messages"
+      SPRING_RABBITMQ_HOST: rabbitmq
 
   gatewayserver:
     image: "dannguyenmessi/gatewaysever:v1"
