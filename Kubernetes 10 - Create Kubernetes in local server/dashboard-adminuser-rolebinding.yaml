@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1 # Version của API dùng để tạo Cluster Role Binding
+kind: ClusterRoleBinding # Loại quyền
+metadata: # Thông tin về Cluster Role Binding
+  name: admin-user # Tên Cluster Role Binding
+roleRef: # Thông tin về Role
+  apiGroup: rbac.authorization.k8s.io # Group của Role
+  kind: ClusterRole # Loại Role
+  name: cluster-admin # Tên Role, bất kỳ người dùng nào được gán Role này sẽ có quyền quản trị toàn bộ Cluster
+subjects: # Danh sách các đối tượng được cấp quyền
+- kind: ServiceAccount # Loại đối tượng được cấp quyền
+  name: admin-user # Tên đối tượng
+  namespace: kubernetes-dashboard # Namespace của đối tượng
