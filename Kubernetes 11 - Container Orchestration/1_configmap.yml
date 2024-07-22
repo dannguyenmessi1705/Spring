@@ -1,0 +1,17 @@
+apiVersion: v1 # apiVersion dùng để tạo ConfigMap
+kind: ConfigMap # Loại cấu hình (ConfigMap)
+metadata: # Thông tin về ConfigMap
+  name: bank-configmap # Tên ConfigMap
+data: # Dữ liệu của ConfigMap
+  SPRING_PROFILES_ACTIVE: prod
+  SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071/" # Thuộc tính spring.config.import trong (application.properties) của ứng dụng
+  EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eurekaserver:8070/eureka/" # Thuộc tính eureka.client.serviceUrl.defaultZone trong (application.properties) của ứng dụng
+  CONFIGSERVER_APPLICATION_NAME: configserver  # Thuộc tính spring.application.name trong (application.properties) của ứng dụng, tuy nhiên thay `spring` bằng `CONFIGSERVER` (tên của ứng dụng trong Kubernetes)
+  EUREKA_APPLICATION_NAME: eurekaserver # Thuộc tính spring.application.name trong (application.properties) của ứng dụng
+  ACCOUNTS_APPLICATION_NAME: accounts # Thuộc tính spring.application.name trong (application.properties) của ứng dụng
+  LOANS_APPLICATION_NAME: loans # Thuộc tính spring.application.name trong (application.properties) của ứng dụng
+  CARDS_APPLICATION_NAME: cards # Thuộc tính spring.application.name trong (application.properties) của ứng dụng
+  GATEWAY_APPLICATION_NAME: gatewayserver # Thuộc tính spring.application.name trong (application.properties) của ứng dụng
+  KEYCLOAK_ADMIN: admin # Thuộc tính KEYCLOAK_ADMIN khi chạy docker run
+  KEYCLOAK_ADMIN_PASSWORD: admin # Thuộc tính KEYCLOAK_ADMIN_PASSWORD khi chạy docker run
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI: "http://keycloak:7080/realms/master/protocol/openid-connect/certs" # Thuộc tính spring.security.oauth2.resourceserver.jwt.jwk-set-uri trong (application.properties) của ứng dụng

@@ -1,0 +1,34 @@
+apiVersion: apps/v1 # apiVersion dùng để deploy 1 ứng dụng
+kind: Deployment # Loại cấu hình (Deployment) - dùng để deploy 1 ứng dụng
+metadata: # Thông tin về Deployment
+  name: configserver-deployment # Tên Deployment
+  labels:
+    app: configserver # Gán nhãn cho ứng dụng được deploy (configserver)
+spec: # Thông tin về cấu hình của Deployment
+  replicas: 1 # Số lượng Pod được tạo ra từ Deployment
+  selector:
+    matchLabels: # Chọn Pod dựa trên nhãn
+      app: configserver # Chọn Pod có nhãn app=configserver để quản lý (trùng với metadata.labels.app)
+  template: # Template của Pod 
+    metadata: # Thông tin về Pod
+      labels:
+        app: configserver # Nhãn của Pod (phải trùng với selector.matchLabels.app và metadata.labels.app ở trên)
+    spec: # Thông tin về cấu hình của Pod
+      containers: # Thông tin về container (Lưu ý nên chỉ có 1 container trong 1 Pod, nếu cần nhiều container thì tạo nhiều Pod, hoặc nếu có 1 container phụ thuộc vào container chính thì sử dụng sidecar container)
+      - name: configserver # Tên container (nên đặt tên giống với metadata.labels.app ở trên)
+        image: dannguyenmessi/configserver:v1 # Image của container (không có prefix thì sẽ lấy image từ Local, nếu muốn lấy image từ Docker Hub thì phải thêm prefix docker.io/ trước tên image)
+        ports: # Cổng mà container sẽ sử dụng ở bên trong Pod
+        - containerPort: 8071 # Cổng 8071
+--- # Dấu --- để phân biệt giữa các cấu hình Deployment và Service
+apiVersion: v1 # apiVersion dùng để triển khai 1 dịch vụ
+kind: Service # Loại cấu hình (Service)
+metadata: # Thông tin về Service
+  name: configserver # Tên Service (tên này sẽ như là 1 hostname để gọi đến các Pod, trong `Docker Compose` thì sẽ là tên của service)
+spec: # Thông tin về cấu hình của Service
+  selector: # Chọn Pod dựa trên nhãn
+    app: configserver # Chọn Pod có nhãn app=configserver để quản lý (trùng với metadata.labels.app cấu hình `Deployment`)
+  type: LoadBalancer # Loại Service [LoadBalancer (Map cổng ra bên ngoài), NodePort (Map cổng ra bên ngoài), ClusterIP (Chỉ sử dụng trong Cluster)]
+  ports: # Cổng mà Service sẽ sử dụng ở bên ngoài
+  - protocol: TCP # Giao thức TCP
+    port: 8071 # Cổng 8071 sẽ map ra bên ngoài
+    targetPort: 8071 # Đích đến của dịch vụ (cổng 8071 của bên trong Pod)

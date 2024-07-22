@@ -1,0 +1,55 @@
+apiVersion: apps/v1 # apiVersion dùng để deploy 1 ứng dụng
+kind: Deployment # Loại cấu hình (Deployment) - dùng để deploy 1 ứng dụng
+metadata:
+  name: loans # Tên Deployment
+  labels:
+    app: loans # Gán nhãn cho ứng dụng được deploy (loans)
+spec:
+  selector:
+    matchLabels:
+      app: loans # Chọn Pod có nhãn app=loans để quản lý (trùng với metadata.labels.app)
+  template:
+    metadata:
+      labels:
+        app: loans # Nhãn của Pod (phải trùng với selector.matchLabels.app và metadata.labels.app ở trên)
+    spec:
+      containers:
+        - name: loans # Tên container (nên đặt tên giống với metadata.labels.app ở trên)
+          image: dannguyenmessi/loans:v1
+          env:
+            - name: SPRING_APPLICATION_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: bank-configmap
+                  key: LOANS_APPLICATION_NAME
+            - name: SPRING_CONFIG_IMPORT
+              valueFrom:
+                configMapKeyRef:
+                  name: bank-configmap
+                  key: SPRING_CONFIG_IMPORT
+            - name: SPRING_PROFILES_ACTIVE
+              valueFrom:
+                configMapKeyRef:
+                  name: bank-configmap
+                  key: SPRING_PROFILES_ACTIVE
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              valueFrom:
+                configMapKeyRef:
+                  name: bank-configmap
+                  key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+          ports:
+            - containerPort: 8090 # Cổng 8090
+              protocol: TCP
+---
+apiVersion: v1 # apiVersion dùng để triển khai 1 dịch vụ
+kind: Service # Loại cấu hình (Service)
+metadata:
+  name: loans # Tên Service (tên này sẽ như là 1 hostname để gọi đến các Pod, trong `Docker Compose` thì sẽ là tên của service)
+spec:
+  selector:
+    app: loans # Chọn Pod có nhãn app=loans để quản lý (trùng với metadata.labels.app cấu hình `Deployment`)
+  type: LoadBalancer # Loại Service [LoadBalancer (Map cổng ra bên ngoài), NodePort (Map cổng ra bên ngoài), ClusterIP (Chỉ sử dụng trong Cluster)]
+  ports:
+    - protocol: TCP # Giao thức TCP
+      port: 8090 # Cổng 8090 sẽ map ra bên ngoài
+      targetPort: 8090 # Đích đến của dịch vụ (cổng 8090 của bên trong Pod)

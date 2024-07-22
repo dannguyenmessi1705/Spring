@@ -1,0 +1,46 @@
+apiVersion: apps/v1 # apiVersion dùng để deploy 1 ứng dụng
+kind: Deployment # Loại cấu hình (Deployment) - dùng để deploy 1 ứng dụng
+metadata:
+  name: keycloak # Tên Deployment
+  labels:
+    app: keycloak # Gán nhãn cho ứng dụng được deploy (keycloak)
+spec:
+  selector:
+    matchLabels:
+      app: keycloak # Chọn Pod có nhãn app=keycloak để quản lý (trùng với metadata.labels.app)
+  template:
+    metadata:
+      labels:
+        app: keycloak # Nhãn của Pod (phải trùng với selector.matchLabels.app và metadata.labels.app ở trên)
+    spec:
+      containers:
+        - name: keycloak # Tên container (nên đặt tên giống với metadata.labels.app ở trên)
+          image: quay.io/keycloak/keycloak:25.0.2
+          args: ["start-dev"]
+          env:
+            - name: KEYCLOAK_ADMIN
+              valueFrom:
+                configMapKeyRef:
+                  name: bank-configmap
+                  key: KEYCLOAK_ADMIN
+            - name: KEYCLOAK_ADMIN_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: bank-configmap
+                  key: KEYCLOAK_ADMIN_PASSWORD
+          ports:
+            - name: http # Đặt tên cho cổng để dễ nhận biết cổng này thuộc về dịch vụ gì
+              containerPort: 8080 # Cổng 8080
+---
+apiVersion: v1 # apiVersion dùng để triển khai 1 dịch vụ
+kind: Service # Loại cấu hình (Service)
+metadata:
+  name: keycloak # Tên Service (tên này sẽ như là 1 hostname để gọi đến các Pod, trong `Docker Compose` thì sẽ là tên của service)
+spec:
+  selector:
+    app: keycloak # Chọn Pod có nhãn app=keycloak để quản lý (trùng với metadata.labels.app cấu hình `Deployment`)
+  type: LoadBalancer # Loại Service [LoadBalancer (Map cổng ra bên ngoài), NodePort (Map cổng ra bên ngoài), ClusterIP (Chỉ sử dụng trong Cluster)]
+  ports:
+    - name: http # Đặt tên cho cổng để dễ nhận biết cổng này thuộc về dịch vụ gì
+      port: 7080 # Cổng 7080 sẽ map ra bên ngoài
+      targetPort: 8080 # Đích đến của dịch vụ (cổng 8080 của bên trong Pod)
