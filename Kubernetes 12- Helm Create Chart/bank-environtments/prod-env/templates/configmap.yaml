@@ -1,0 +1,1 @@
+{{- template "common.configmap" . -}} # Sử dụng template configmap từ chart common

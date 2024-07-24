@@ -1,0 +1,6 @@
+dependencies:
+- name: bank-common
+  repository: file://../../bank-common
+  version: 0.1.0
+digest: sha256:36447ae598e7648c5f792fd696c5df345bb9cdd623ddfde527acf64f008c9997
+generated: "2024-07-24T11:27:57.2870364+07:00"
