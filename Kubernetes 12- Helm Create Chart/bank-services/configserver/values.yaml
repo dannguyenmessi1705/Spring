@@ -9,7 +9,7 @@ appName: configserver
 replicaCount: 1
 
 image:
-  repository: dannguyenmessi1705/configserver
+  repository: dannguyenmessi/configserver
   tag: v1
 
 containerPort: 8071

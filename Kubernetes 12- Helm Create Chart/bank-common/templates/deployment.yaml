@@ -71,10 +71,7 @@ spec:
               name: {{ .Values.global.configMapName }} # Tên ConfigMap, lấy giá trị configmapName từ file values.yaml
               key: OTEL_METRICS_EXPORTER # Key của ConfigMap
         - name: OTEL_SERVICE_NAME
-          valueFrom:
-            configMapKeyRef:
-              name: {{ .Values.global.configMapName }} # Tên ConfigMap, lấy giá trị configmapName từ file values.yaml
-              key: OTEL_SERVICE_NAME # Key của ConfigMap
+          value: {{ .Values.appName }}
         {{- end -}} # Kết thúc điều kiện
         {{- if .Values.kafka_enabled }} # Nếu có kafka_enabled trong file values.yaml
         - name: SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS # Tên biến môi trường
