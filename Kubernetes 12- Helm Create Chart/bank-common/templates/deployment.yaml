@@ -25,35 +25,35 @@ spec:
         {{- if .Values.appname_enabled }} # Nếu có appname_enabled trong file values.yaml
         - name: SPRING_APPLICATION_NAME # Tên biến môi trường
           value: {{ .Values.appName }} # Giá trị biến môi trường, lấy giá trị appname từ file values.yaml
-        {{- end -}} # Kết thúc điều kiện
+        {{- end }} # Kết thúc điều kiện
         {{- if .Values.profile_enabled }} # Nếu có profile_enabled trong file values.yaml
         - name: SPRING_PROFILES_ACTIVE # Tên biến môi trường
           valueFrom:
             configMapKeyRef:
               name: {{ .Values.global.configMapName }} # Tên ConfigMap, lấy giá trị configmapName từ file values.yaml
               key: SPRING_PROFILES_ACTIVE # Key của ConfigMap
-        {{- end -}} # Kết thúc điều kiện
+        {{- end }} # Kết thúc điều kiện
         {{- if .Values.config_enabled }} # Nếu có config_enabled trong file values.yaml
         - name: SPRING_CONFIG_IMPORT # Tên biến môi trường
           valueFrom:
             configMapKeyRef:
               name: {{ .Values.global.configMapName }} # Tên ConfigMap, lấy giá trị configmapName từ file values.yaml
               key: SPRING_CONFIG_IMPORT # Key của ConfigMap
-        {{- end -}} # Kết thúc điều kiện
+        {{- end }} # Kết thúc điều kiện
         {{- if .Values.eureka_enabled }} # Nếu có eureka_enabled trong file values.yaml
         - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE # Tên biến môi trường
           valueFrom:
             configMapKeyRef:
               name: {{ .Values.global.configMapName }} # Tên ConfigMap, lấy giá trị configmapName từ file values.yaml
               key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE # Key của ConfigMap
-        {{- end -}} # Kết thúc điều kiện
+        {{- end }} # Kết thúc điều kiện
         {{- if .Values.resourceserver_enabled }} # Nếu có resourceserver_enabled trong file values.yaml
         - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI # Tên biến môi trường
           valueFrom:
             configMapKeyRef:
               name: {{ .Values.global.configMapName }} # Tên ConfigMap, lấy giá trị configmapName từ file values.yaml
               key: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI # Key của ConfigMap
-        {{- end -}} # Kết thúc điều kiện
+        {{- end }} # Kết thúc điều kiện
         {{- if .Values.otel_enabled }} # Nếu có otel_enabled trong file values.yaml
         - name: JAVA_TOOL_OPTIONS # Tên biến môi trường
           valueFrom:
@@ -72,12 +72,12 @@ spec:
               key: OTEL_METRICS_EXPORTER # Key của ConfigMap
         - name: OTEL_SERVICE_NAME
           value: {{ .Values.appName }}
-        {{- end -}} # Kết thúc điều kiện
+        {{- end }} # Kết thúc điều kiện
         {{- if .Values.kafka_enabled }} # Nếu có kafka_enabled trong file values.yaml
         - name: SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS # Tên biến môi trường
           valueFrom:
             configMapKeyRef:
               name: {{ .Values.global.configMapName }} # Tên ConfigMap, lấy giá trị configmapName từ file values.yaml
               key: SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS # Key của ConfigMap
-        {{- end -}} # Kết thúc điều kiện
+        {{- end }} # Kết thúc điều kiện
 {{- end -}} # Kết thúc định nghĩa template deployment
