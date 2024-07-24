@@ -1,0 +1,26 @@
+server:
+  port: 9010
+
+spring:
+  application:
+    name: "messages"
+  cloud:
+    function:
+      definition: email|sms # Gop 2 function email va sms thanh 1 function voi entrypoint la emailsms, no se goi 2 function email va sms cung 1 luc
+    stream: # Khai bao cac binding giua cac function
+      bindings:
+        emailsms-in-0: # Khai bao binding voi quy tac ten la <function-name>-in-<index> (in la input giao tiep voi queue do service khac gui den)
+          destination: send-message # Ten queue ma service nay se nhan message tu service khac
+          group: ${spring.application.name} # Group cua service, dung de phan biet cac service khac nhau
+        emailsms-out-0: # Khai bao binding voi quy tac ten la <function-name>-out-<index> (out la output giao tiep voi exchange de gui message den service khac)
+          destination: message-sent # Ten exchange ma service nay se gui message den service khac
+      kafka:
+        binder:
+          brokers:
+            - localhost:9092 # Dia chi cua Kafka server
+#  rabbitmq:
+#    host: localhost
+#    username: guest
+#    password: guest
+#    port: 5672
+#    connection-timeout: 10s
