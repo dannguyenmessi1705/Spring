@@ -1,0 +1,27 @@
+apiVersion: apps/v1 # apiVersion dùng để deploy 1 ứng dụng
+kind: Deployment # Loại cấu hình (Deployment) - dùng để deploy 1 ứng dụng
+metadata:
+  name: keycloak # Tên Deployment
+  labels:
+    app: keycloak # Gán nhãn cho ứng dụng được deploy (keycloak)
+spec:
+  selector:
+    matchLabels:
+      app: keycloak # Chọn Pod có nhãn app=keycloak để quản lý (trùng với metadata.labels.app)
+  template:
+    metadata:
+      labels:
+        app: keycloak # Nhãn của Pod (phải trùng với selector.matchLabels.app và metadata.labels.app ở trên)
+    spec:
+      containers:
+        - name: keycloak # Tên container (nên đặt tên giống với metadata.labels.app ở trên)
+          image: quay.io/keycloak/keycloak:25.0.2
+          args: ["start-dev"]
+          env:
+            - name: KEYCLOAK_ADMIN
+              value: admin
+            - name: KEYCLOAK_ADMIN_PASSWORD
+              value: admin
+          ports:
+            - name: http # Đặt tên cho cổng để dễ nhận biết cổng này thuộc về dịch vụ gì
+              containerPort: 8080 # Cổng 8080
