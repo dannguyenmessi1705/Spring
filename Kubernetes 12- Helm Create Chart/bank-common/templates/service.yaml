@@ -1,0 +1,15 @@
+{{- define "common.service" -}} # Định nghĩa template service
+apiVersion: v1 # Version dành cho Service
+kind: Service # Loại cấu hình là Service
+metadata:
+  name: {{ .Values.serviceName }} # Tên Service, lấy giá trị serviceName từ file values.yaml
+spec:
+  selector: # Chọn Pod dựa trên label
+    app: {{ .Values.appLabel }} # Lấy giá trị appLabel từ file values.yaml
+  type: {{ .Values.service.type }} # Loại Service, lấy giá trị type từ file values.yaml
+  port:
+    - name: http # Tất cả các dịch vụ khác sẽ có chung cấu hình này
+      protocol: TCP # Giao thức sử dụng cho tất cả các dịch vụ (Vì nó là một biến tĩnh)
+      port: {{ .Values.service.port }} # Port của Service, lấy giá trị port từ file values.yaml
+      targetPort: {{ .Values.service.targetPort }} # Port của Pod, lấy giá trị targetPort từ file values.yaml
+{{- end -}} # Kết thúc định nghĩa template service
