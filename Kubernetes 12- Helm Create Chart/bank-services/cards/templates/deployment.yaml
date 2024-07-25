@@ -1,1 +1,1 @@
-{{- template "common.deployment" . -}} # Sử dụng template deployment từ chart common
+{{- template "common.deployment" . -}} 

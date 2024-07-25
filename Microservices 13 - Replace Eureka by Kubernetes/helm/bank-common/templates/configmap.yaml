@@ -1,4 +1,4 @@
-{{- define "common.configmap" -}} # Định nghĩa template configmap
+{{- define "common.configmap" -}} 
 apiVersion: v1 # Version dành cho ConfigMap
 kind: ConfigMap # Loại cấu hình là ConfigMap
 metadata:
@@ -12,4 +12,4 @@ data: # Dữ liệu của ConfigMap
   OTEL_EXPORTER_OTLP_ENDPOINT: {{ .Values.global.otelExporterEndPoint }}
   OTEL_METRICS_EXPORTER: {{ .Values.global.otelMetricsExporter }}
   SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS: {{ .Values.global.kafkaBrokerURL }}
-{{- end -}} # Kết thúc định nghĩa template configmap
+{{- end -}}

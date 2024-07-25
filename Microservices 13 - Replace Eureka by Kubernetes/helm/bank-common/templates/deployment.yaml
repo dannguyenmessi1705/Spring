@@ -1,4 +1,4 @@
-{{- define "common.deployment" -}} # Định nghĩa template deployment
+{{- define "common.deployment" -}}
 apiVersion: apps/v1 # Version dành cho Deployment
 kind: Deployment # Loại cấu hình là Deployment
 metadata:
@@ -80,4 +80,4 @@ spec:
               name: {{ .Values.global.configMapName }} # Tên ConfigMap, lấy giá trị configmapName từ file values.yaml
               key: SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS # Key của ConfigMap
         {{- end }} # Kết thúc điều kiện
-{{- end -}} # Kết thúc định nghĩa template deployment
+{{- end -}}
