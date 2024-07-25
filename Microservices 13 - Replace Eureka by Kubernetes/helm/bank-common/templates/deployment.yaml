@@ -40,12 +40,12 @@ spec:
               name: {{ .Values.global.configMapName }} # Tên ConfigMap, lấy giá trị configmapName từ file values.yaml
               key: SPRING_CONFIG_IMPORT # Key của ConfigMap
         {{- end }} # Kết thúc điều kiện
-        {{- if .Values.eureka_enabled }} # Nếu có eureka_enabled trong file values.yaml
-        - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE # Tên biến môi trường
+        {{- if .Values.discoveryclient_enabled }} # Nếu có discoveryclient trong file values.yaml
+        - name: SPRING_CLOUD_KUBERNETES_DISCOVERY_DISCOVERY-SERVER-URL # Tên biến môi trường
           valueFrom:
             configMapKeyRef:
               name: {{ .Values.global.configMapName }} # Tên ConfigMap, lấy giá trị configmapName từ file values.yaml
-              key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE # Key của ConfigMap
+              key: SPRING_CLOUD_KUBERNETES_DISCOVERY_DISCOVERY-SERVER-URL # Key của ConfigMap
         {{- end }} # Kết thúc điều kiện
         {{- if .Values.resourceserver_enabled }} # Nếu có resourceserver_enabled trong file values.yaml
         - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI # Tên biến môi trường

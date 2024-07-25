@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.circuitbreaker.resilience4j.ReactiveResilience4JCircuitBreakerFactory;
 import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JConfigBuilder;
 import org.springframework.cloud.client.circuitbreaker.Customizer;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.gateway.filter.ratelimit.KeyResolver;
 import org.springframework.cloud.gateway.filter.ratelimit.RedisRateLimiter;
 import org.springframework.cloud.gateway.route.RouteLocator;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpMethod;
 import reactor.core.publisher.Mono;
 
 @SpringBootApplication
+@EnableDiscoveryClient
 public class GatewayseverApplication {
 
   public static void main(String[] args) {
@@ -33,7 +35,7 @@ public class GatewayseverApplication {
                 .addRequestHeader("X-TIME", LocalTime.now().toString())  // Thêm header vào request
                 .circuitBreaker(config -> config.setName("accountsCircuitBreaker") // Sử dụng Circuit Breaker, tên là accountsCircuitBreaker
                     .setFallbackUri("forward:/contactSupport"))) // Nếu có lỗi thì chuyển hướng đến đường dẫn /contactSupport, đã định nghĩa trong Controller
-            .uri("lb://ACCOUNTS")) // Đường dẫn của microservices cần gọi
+            .uri("http://accounts:8080")) // Đường dẫn của microservices cần gọi, trong Kubernetes sẽ là tên của service
         .route(p -> p.path("/didan/loans/**")
             .filters(f -> f.rewritePath("/didan/loans/(?<remaining>.*)", "/${remaining}")
                 .retry(retryConfig -> retryConfig.setRetries(3) // Sử dụng Retry, thử lại 3 lần nếu lần đầu không thành công
@@ -45,12 +47,12 @@ public class GatewayseverApplication {
                     // param 4 - basedOnPreviousValue: true - dựa trên giá trị thời gian giữa các lần thử lại trước đó,
                     //                                 false - dựa trên giá trị thời gian giữa lần thử lại đầu tiên và lần thử lại thứ 2
                 ))
-            .uri("lb://LOANS"))
+            .uri("http://loans:8090")) // Đường dẫn của microservices cần gọi, trong Kubernetes sẽ là tên của service
         .route(p -> p.path("/didan/cards/**")
             .filters(f -> f.rewritePath("/didan/cards/(?<remaining>.*)", "/${remaining}")
                 .requestRateLimiter(config -> config.setRateLimiter(redisRateLimiter())
                     .setKeyResolver(userKeyResolver())))
-            .uri("lb://CARDS"))
+            .uri("http://cards:9000")) // Đường dẫn của microservices cần gọi, trong Kubernetes sẽ là tên của service
         .build();
   }
 

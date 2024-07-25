@@ -37,6 +37,10 @@ spring:
      binder:
       brokers:
        - localhost:9092 # Dia chi cua Kafka server
+   kubernetes:
+     discovery:
+      all-namespaces: true
+      discovery-server-url: http://spring-cloud-kubernetes-discoveryserver:80/ # URL của K8s discovery server, tên và port của service chính là tên của service, và port container mà đã định nghĩa trong file `kubernetes-discoveryserver.yaml`
 # rabbitmq:
 #  host: localhost
 #  port: 5672
@@ -89,15 +93,15 @@ endpoints:
  shutdown:
   enabled: true # Cho phép dùng endpoint /shutdown để tắt service mà không cần tắt container
 
-## Cấu hình Eureka client
-eureka:
- instance:
-  prefer-ip-address: true # Các service sẽ đăng ký với Eureka dùng IP thay vì dùng dns hoặc hostname
- client:
-  fetch-registry: true # Service này sẽ fetch thông tin của các service khác từ Eureka server
-  register-with-eureka: true # Service này sẽ đăng ký với Eureka server
-  service-url:
-    defaultZone: http://localhost:8070/eureka/ # URL của Eureka server
+### Cấu hình Eureka client, nếu sử dụng K8S thì không cần cấu hình Eureka client
+#eureka:
+# instance:
+#  prefer-ip-address: true # Các service sẽ đăng ký với Eureka dùng IP thay vì dùng dns hoặc hostname
+# client:
+#  fetch-registry: true # Service này sẽ fetch thông tin của các service khác từ Eureka server
+#  register-with-eureka: true # Service này sẽ đăng ký với Eureka server
+#  service-url:
+#    defaultZone: http://localhost:8070/eureka/ # URL của Eureka server
 
 ## Thông tin về service hiển thị trên Eureka dashboard
 info:

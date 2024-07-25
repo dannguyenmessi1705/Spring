@@ -4,11 +4,16 @@ spring:
   config:
     import: optional:configserver:http://localhost:8071
   cloud:
-    gateway:
+    kubernetes:
       discovery:
-        locator:
-          enabled: false # Cho ph�p Gateway Server s? d?ng Eureka ?? t�m ki?m, ??nh tuy?n c�c service
-          lower-case-service-id: true # Chuy?n t�n service th�nh ch? th??ng, tr�nh l?i khi g?i service
+        all-namespaces: true
+        enabled: true
+        discovery-server-url: http://spring-cloud-kubernetes-discoveryserver:80/ # URL của K8s discovery server, tên và port của service chính là tên của service, và port container mà đã định nghĩa trong file `kubernetes-discoveryserver.yaml`
+#     gateway:
+#      discovery:
+#        locator:
+#          enabled: false # Cho ph�p Gateway Server s? d?ng Eureka ?? t�m ki?m, ??nh tuy?n c�c service
+#          lower-case-service-id: true # Chuy?n t�n service th�nh ch? th??ng, tr�nh l?i khi g?i service
       httpclient:
         connect-timeout: 10000 # Thoi gian toi da de ket noi toi service
         response-timeout: 10s # Thoi gian toi da de nhan phan hoi tu service
@@ -65,7 +70,7 @@ resilience4j:
         wait-duration-in-open-state:
           seconds: 10 # Thoi gian cho phep service chuyen sang HALF-OPEN de kiem tra lai service tu khi circuit breaker chuyen sang OPEN
 
-# C?u h�nh ? Config Server
+# Cau hinh o Config Server
 #server:
 #  port: 8072
 #

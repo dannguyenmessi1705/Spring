@@ -1,1 +1,0 @@
-{{- template "common.service" . -}} # Sử dụng template service từ chart common

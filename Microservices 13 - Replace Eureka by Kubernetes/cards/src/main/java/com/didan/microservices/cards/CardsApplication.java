@@ -2,6 +2,7 @@ package com.didan.microservices.cards;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -14,6 +15,7 @@ import io.swagger.v3.oas.annotations.security.SecuritySchemes;
 import io.swagger.v3.oas.annotations.servers.Server;
 
 @SpringBootApplication
+@EnableDiscoveryClient
 @EnableJpaAuditing(auditorAwareRef = "auditAwareImpl") // Sử dụng JPA Auditing và trỏ đến Bean auditAwareImpl để lấy thông tin người tạo hoặc cập nhật dữ liệu
 @OpenAPIDefinition(
 	info = @Info(

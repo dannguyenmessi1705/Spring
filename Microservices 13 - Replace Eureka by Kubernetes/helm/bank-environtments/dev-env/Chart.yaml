@@ -32,10 +32,6 @@ dependencies:
   - name: configserver
     version: 0.1.0
     repository: file://../../bank-services/configserver
-    
-  - name: eurekaserver
-    version: 0.1.0
-    repository: file://../../bank-services/eurekaserver
   
   - name: accounts
     version: 0.1.0

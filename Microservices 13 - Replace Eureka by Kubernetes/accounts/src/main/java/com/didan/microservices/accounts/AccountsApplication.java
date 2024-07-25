@@ -2,6 +2,7 @@ package com.didan.microservices.accounts;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
@@ -17,6 +18,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
 import io.swagger.v3.oas.annotations.servers.Servers;
 
 @SpringBootApplication
+@EnableDiscoveryClient // Sử dụng Discovery Client để đăng ký và tìm kiếm các Microservices khác
 @EnableJpaAuditing(auditorAwareRef = "auditAwareImpl") // Sử dụng JPA Auditing và trỏ đến Bean auditAwareImpl để lấy thông tin người tạo hoặc cập nhật dữ liệu
 @EnableFeignClients // Sử dụng Feign để gọi các API từ các Microservices khác
 @OpenAPIDefinition(

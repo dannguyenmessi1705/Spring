@@ -5,9 +5,6 @@ dependencies:
 - name: configserver
   repository: file://../../bank-services/configserver
   version: 0.1.0
-- name: eurekaserver
-  repository: file://../../bank-services/eurekaserver
-  version: 0.1.0
 - name: accounts
   repository: file://../../bank-services/accounts
   version: 0.1.0
@@ -23,5 +20,5 @@ dependencies:
 - name: message
   repository: file://../../bank-services/message
   version: 0.1.0
-digest: sha256:3b35bc06f5c72217fb9540e4742340cfcfa294ed22b67e60d21fef4b194bd1a9
-generated: "2024-07-24T11:36:20.8118833+07:00"
+digest: sha256:f0ae1f9f32107507c2772c1cd7771b0df1ac032426c59e924da6aaf0b284a303
+generated: "2024-07-25T11:04:37.1102061+07:00"
