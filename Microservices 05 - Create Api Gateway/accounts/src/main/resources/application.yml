@@ -33,11 +33,11 @@ management:
   web:
    exposure:
     include: "*"
-  health:
-   readiness-state:
-    enabled: true
-   liveness-state:
-    enabled: true
+ health:
+  readiness-state:
+   enabled: true
+  liveness-state:
+   enabled: true
  endpoint:
    shutdown:
     enabled: true # Cho phép dùng endpoint /actuator/shutdown để tắt service mà không cần tắt container
