@@ -1,0 +1,27 @@
+/** @type {import("prettier").Config} */
+const config = {
+  arrowParens: "always",
+  bracketSpacing: true,
+  endOfLine: "auto",
+  htmlWhitespaceSensitivity: "css",
+  insertPragma: false,
+  singleAttributePerLine: false,
+  bracketSameLine: false,
+  jsxBracketSameLine: false,
+  jsxSingleQuote: false,
+  printWidth: 80,
+  proseWrap: "preserve",
+  quoteProps: "as-needed",
+  requirePragma: false,
+  semi: true,
+  singleQuote: false,
+  tabWidth: 2,
+  trailingComma: "es5",
+  useTabs: false,
+  embeddedLanguageFormatting: "auto",
+  vueIndentScriptAndStyle: false,
+  experimentalTernaries: false,
+  parser: "typescript",
+  plugins: ["prettier-plugin-tailwindcss"],
+};
+export default config;
