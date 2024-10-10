@@ -1,20 +1,26 @@
-# Sử dụng Redis kết hợp với Redisson và Jackson trong Spring Boot
-Trong bài viết này, chúng ta sẽ tìm hiểu cách sử dụng Redis kết hợp với Redisson và Jackson trong Spring Boot.
+# Sử dụng Cache trong Spring Boot
+Trong bài viết này, chúng ta sẽ tìm hiểu cách sử dụng Cache trong ứng dụng Spring Boot.
 
 ## 1. Giới thiệu.
-### 1.1. Redis
-Redis là một hệ thống cơ sở dữ liệu mã nguồn mở, lưu trữ dữ liệu dạng `key-value`.
+### 1.1. LoadingCache
+LoadingCache là một interface trong thư viện `caffeine` hỗ trợ cache dữ liệu trong bộ nhớ. Nó có cơ chế tự động load dữ liệu vào cache khi dữ liệu không tồn tại trong cache.
+
+### 1.2. CacheLoader
+CacheLoader là một công cụ có trong thư viện `caffeine` hỗ trợ nạp dữ liệu cho LoadingCache mỗi khi LoadingCache không chứa dữ liệu cần tìm.
+
+### 1.3. Redis
+Redis là một hệ thống cơ sở dữ liệu mã nguồn mở, lưu trữ dữ liệu dạng `key-value`, dữ liệu sẽ lưu ở 1 server nào đó, khác với `LoadingCache`.
 
 Hỗ trợ nhiều kiểu dữ liệu như string, list, set, sorted set, hash, stream, hyperloglog, bitmap, geospatial và định tuyến. 
 
 Redis cung cấp các tính năng như in-memory, lưu trữ dữ liệu trên ổ đĩa, replica, partition, cluster, pub/sub, lua scripting, transation, key expiration, LRU eviction, geospatial indexing, và các tính năng khác.
 
-### 1.2. Redisson
+### 1.4. Redisson
 Redisson là một thư viện Java hỗ trợ tương tác với Redis. 
 
 Redisson cung cấp các tính năng như Redis client, Redisson client, Redisson Spring Cache, Redisson Spring Data, Redisson Spring Session, Redisson Spring Boot Starter, Redisson Spring Data Connection, Redisson Spring Data Repository, Redisson Spring Data Transaction, Redisson Spring Data Web, Redisson Spring Data Web Reactive, Redisson Spring Data Web Socket, Redisson Spring Data Web Socket
 
-### 1.3. Jackson
+### 1.5. Jackson
 Jackson là một thư viện Java hỗ trợ chuyển đổi dữ liệu giữa Java Object và JSON.
 
 Để làm việc với Redis, chúng ta cần chuyển đổi dữ liệu giữa Java Object sang JSON khi lưu vào Redis và ngược lại khi lấy dữ liệu từ Redis.
@@ -528,3 +534,211 @@ public class CacheService {
 ```
 
 TỪ `CacheService` chúng ta có thể Inject vào các `Service` khác để thực hiện các thao tác với Redis.
+
+### 2.5. Sử dụng `@Cacheable`, `@CachePut`, `@CacheEvict` trong ứng dụng.
+Chúng ta có thể sử dụng các annotation `@Cacheable`, `@CachePut`, `@CacheEvict` để thực hiện các thao tác với cache.
+
+Để làm được điều này, cần phải khai báo @Bean `CacheManager` trong class `RedissonCacheConfig` và cấu hình `@EnableCaching` trong class `DemoApplication`.
+
+Trước tiên thì cũng cần phải cài đặt `dependency` `spring-boot-starter-cache` trong `pom.xml`.
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-cache</artifactId>
+</dependency>
+```
+
+#### 2.5.1. Cấu hình `@EnableCaching` trong class `DemoApplication`.
+```java
+package com.example.demo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
+
+@SpringBootApplication
+
+@EnableCaching // Bật chế độ cache
+public class DemoApplication {
+
+  public static void main(String[] args) {
+    SpringApplication.run(DemoApplication.class, args);
+  }
+
+}
+```
+
+#### 2.5.2. Khai báo `CacheManager` trong class `RedissonCacheConfig`.
+```java
+@Bean
+public CacheManager redisCacheManager(RedissonConnectionFactory redissonConnectionFactory,
+    RedissonConfigurationProperties properties) {
+  Map<String, RedisCacheConfiguration> config = new HashMap<>();
+  RedisCacheWriter redisCacheWriter = RedisCacheWriter.nonLockingRedisCacheWriter(redissonConnectionFactory);
+  for (Map.Entry<String, Long> cachesWithTtl : properties.getCacheExpirations().entrySet()) {
+    config.put(cachesWithTtl.getKey(), createDefaultCacheConfiguration(cachesWithTtl.getValue()));
+  }
+  return RedisCacheManager.builder(redisCacheWriter)
+      .cacheDefaults(createDefaultCacheConfiguration(properties.getTtl()))
+      .withInitialCacheConfigurations(config)
+      .build();
+}
+
+```
+
+Sau đó, chúng ta có thể sử dụng các annotation `@Cacheable`, `@CachePut`, `@CacheEvict` trong các `Service` khác để thực hiện các thao tác với cache. Trong đó:
+- `@Cacheable`: Đánh dấu phương thức sẽ cache kết quả trả về của phương thức. Spring sẽ kiểm tra cache trước khi thực hiện phương thức, nếu chưa có cache thì sẽ thực hiện khối logic trong code
+- `@CachePut`: Đánh dấu phương thức sẽ cache kết quả trả về của phương thức và cập nhật cache.
+- `@CacheEvict`: Đánh dấu phương thức sẽ xóa cache.
+- `@Caching`: Đánh dấu phương thức sẽ thực hiện nhiều thao tác với cache.
+- `@CacheConfig`: Đánh dấu class sẽ sử dụng cache với tên cache và cacheManager cụ thể, ví dụ trong `RedissonCacheConfig` thì chúng ta có thể khai báo `@CacheConfig(cacheNames = {"cacheName"}, cacheManager= "redisCacheManager")` trên class. Ngoài ra, nếu có nhiều `CacheManager` ở trong file khác thì chúng ta có thể khai báo nhiều `CacheManager` khác nhau.
+
+
+Ví dụ:
+> Service.java
+
+```java
+import org.hibernate.annotations.Cache;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
+
+@Service
+@Slf4j
+
+@CacheConfig(cacheNames = {"namefunc"}, cacheManager= "redisCacheManager") // Nếu muốn sử dụng cache với tên cache là "namefunc" và cacheManager là "redisCacheManager" thì khai báo như này
+public class Service {
+
+  @Cacheable(value = "namefunc", key = "#user.name", sync = true)
+  // Lưu kết quả trả về của method vào cache với tên cache là "namefunc" và giá trị mà nó lưu trữ là biến `user.name` trong hàm. Đây là 1 cách lưu cache custom
+  // @Cacheable("namefunc") // Nếu chỉ cân lưu kết quả trả về của hàm vào trong cache tên là "namefunc" thì chỉ cần viết như này
+  public String getName(User user) {
+    return name;
+  }
+
+  @CacheEvict(value = "namefunc", key = "#name")
+  public void deleteName(String name) {
+    log.info("Delete name: {}", name);
+  }
+
+  @Caching(evict = {
+      @CacheEvict(value = "namefunc", key = "#name"),
+      @CacheEvict(value = "namefunc", key = "#name")
+  })
+  public void deleteName(String name) {
+    log.info("Delete name: {}", name);
+  }
+}
+
+```
+
+## 3. Sử dụng Caffeine Cache (LoadingCache and CacheLoader) để lưu trữ Cache trn bộ nhớ
+### 3.1. Cài đặt Caffeine Cache
+Chúng ta cần cài đặt `dependency` `caffeine` trong `pom.xml`.
+```xml
+<dependency>
+    <groupId>com.github.ben-manes.caffeine</groupId>
+    <artifactId>caffeine</artifactId>
+    <version>3.1.8</version>
+</dependency>
+```
+
+### 3.2. Cấu hình Caffeine Cache
+Có thể mỗi 1 service, chúng ta sẽ cấu hình 1 `LoadingCache` và `CacheLoader` riêng để lưu trữ cache để phục vụ riêng cho service đó.
+
+> CacheUserService.java
+```java
+package com.didan.loading_cache.service;
+
+import com.didan.loading_cache.dto.UserDto;
+import com.github.benmanes.caffeine.cache.CacheLoader;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
+import jakarta.annotation.PostConstruct;
+import java.time.Duration;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+@Service
+@Slf4j
+public class CacheUserService {
+
+  private final RestTemplateService restTemplateService;
+
+  public CacheUserService(RestTemplateService restTemplateService) {
+    this.restTemplateService = restTemplateService;
+  }
+
+  private LoadingCache<String, UserDto> loadingCache; // Dùng LoadingCache để tự động load dữ liệu khi không tìm thấy trong cache và tự động xóa dữ liệu khi hết hạn
+  private static final int EXPIRETIME = 5; // Thời gian hết hạn cache
+
+  @PostConstruct // Được gọi sau khi bean được khởi tạo (Được gọi sau khi constructor và trước khi các phương thức khác được gọi)
+  public void init() {
+    CacheLoader<String, UserDto> loader = this::load; // Tạo một loader để load dữ liệu khi không tìm thấy trong cache (Nhận key là String và trả về UserDto giống với LoadingCache)
+    loadingCache = Caffeine.newBuilder() // Tạo một LoadingCache với các cấu hình
+        .maximumSize(Integer.MAX_VALUE) // Số lượng phần tử tối đa trong cache
+        .expireAfterWrite(Duration.ofMinutes(EXPIRETIME)) // Thời gian hết hạn cache
+        .evictionListener((key, value, cause) -> log.info("removing key - {}, value - {}, cause: {}", key, value, cause)) // Listener khi xóa phần tử khỏi cache
+        .build(loader); // Sử dụng loader để load dữ liệu khi không tìm thấy trong cache
+  }
+
+  private UserDto load(String key) { // Phương thức load dữ liệu vào CacheLoader (Nhận key là String và trả về UserDto giống với CacheLoader)
+    try {
+      log.info("GET USER FROM KEY [{}]", key);
+      ResponseEntity<UserDto> responseEntity = restTemplateService.process(
+          HttpMethod.GET,
+          "https://jsonplaceholder.typicode.com/users",
+          null,
+          "null",
+          new ParameterizedTypeReference<UserDto>() {
+          }
+      );
+      return responseEntity.getBody();
+    } catch (Exception ex) {
+      log.error("CacheLocal.load error: " + ex.getMessage(), ex);
+      return null;
+    }
+  }
+
+  public UserDto getUser(String key) { // Phương thức lấy dữ liệu từ cache gọi đến LoadingCache, nếu không tìm thấy sẽ gọi đến phương thức load
+    if (!StringUtils.hasText(key)) {
+      log.error("Key is empty");
+      return null;
+    }
+    UserDto userDto = loadingCache.get(key);
+    log.info("Get user from cache: {}", userDto);
+    return userDto;
+  }
+}
+
+```
+
+### 3.3. Sử dụng `CacheLoading` ở nơi khác
+Sau khi cấu hình `LoadingCache` và tạo hàm để lấy dữ liệu từ `LoadingCache`, chúng ta có thể sử dụng `LoadingCache` ở nơi khác trong ứng dụng.
+
+>UserService.java
+```java
+package com.didan.loading_cache.service;
+
+import com.didan.loading_cache.dto.UserDto;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+@Service
+@Slf4j
+@RequiredArgsConstructor
+public class UserService {
+  private final CacheUserService cacheUserService;
+
+  public UserDto getUser(String key) {
+    return cacheUserService.getUser(key); // Gọi đến phương thức getUser trong CacheLocal để lấy dữ liệu từ cache
+  }
+}
+```
