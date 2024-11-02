@@ -23,11 +23,24 @@ public class MessageController {
       @Payload Message chatMessage, // Message được gửi từ client (Sử dụng @Payload để lấy message từ body)
       SimpMessageHeaderAccessor headerAccessor // HeaderAccessor chứa thông tin về message (ví dụ: sessionId, username, ...)
   ) {
+    log.info("User sender: {}", headerAccessor.getSessionAttributes().get("userId"));
     chatMessage.setSessionId(headerAccessor.getSessionId()); // Set sessionId cho message
     sender.send("messaging", chatMessage); // Gửi message tới Kafka
     log.info("Sending message to /topic/public: {}", chatMessage);
-    messagingTemplate.convertAndSend("/topic/public", chatMessage); // Gửi message tới tất cả client subscribe tới /topic/public
-    log.info("Message sent to /topic/public: {}", chatMessage);
+//    messagingTemplate.convertAndSend("/topic/public", chatMessage); // Gửi message tới tất cả client subscribe tới /topic/public
+//    log.info("Message sent to /topic/public: {}", chatMessage);
+  }
+
+  @MessageMapping("/chat.send-private-message") // Khi client gửi message tới /app/chat.send-private-message, phương thức này sẽ được gọi
+  public void sendPrivateMessage(
+      @Payload Message chatMessage, // Message được gửi từ client (Sử dụng @Payload để lấy message từ body)
+      SimpMessageHeaderAccessor headerAccessor // HeaderAccessor chứa thông tin về message (ví dụ: sessionId, username, ...)
+  ) {
+    log.info("User sender: {}", headerAccessor.getSessionAttributes().get("userId"));
+    chatMessage.setSessionId(headerAccessor.getSessionId()); // Set sessionId cho message
+    sender.send("messaging", chatMessage); // Gửi message tới Kafka
+    // message tới user subscribe tới /topic/public
+    log.info("Sending message to /topic/private/{}: {}", chatMessage.getReceiver(), chatMessage);
   }
 
   @MessageMapping("/chat.add-user") // Khi client gửi message tới /app/chat.add-user, phương thức này sẽ được gọi
@@ -36,6 +49,7 @@ public class MessageController {
       @Payload Message chatMessage, // Message được gửi từ client (Sử dụng @Payload để lấy message từ body)
       SimpMessageHeaderAccessor headerAccessor // HeaderAccessor chứa thông tin về message (ví dụ: sessionId, username, ...)
   ) {
+    log.info("User added: {}", chatMessage.getSender());
     if (headerAccessor.getSessionAttributes() != null) { // Nếu session đã được tạo
       headerAccessor.getSessionAttributes().put("username", chatMessage.getSender()); // Set username cho session
     }

@@ -21,6 +21,10 @@ public class Receiver {
   @KafkaListener(topics = "messaging", groupId = "chat") // Lắng nghe message từ Kafka với topic là "messaging" và groupId là "chat"
   public void consume(Message chatMessage) {
     log.info("Received message from Kafka: {}", chatMessage);
+    messagingTemplate.convertAndSend("/topic/private/"+chatMessage.getReceiver(), chatMessage); //
+    // Gửi message
+    // tới tất cả
+    // client subscribe tới /topic/public
     log.info("User count: {}", simpUserRegistry.getUsers().size());
     for (SimpUser user : simpUserRegistry.getUsers()) { // Duyệt qua tất cả user đang kết nối tới server
       for (SimpSession simpSession : user.getSessions()) { // Duyệt qua tất cả session của user

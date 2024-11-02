@@ -10,16 +10,15 @@ import ChatMessage from "./ChatMessage.tsx";
 type ChatPageProps = {
   username: string;
 }
-type Message = {
-  sender: string;
-  type: string;
-}
+
 type Chat = {
   sender: string;
   content: string;
   type: string;
+  receiver?: string;
 }
 function ChatPage({ username } : ChatPageProps) {
+  const roomId: string = "testroom";
   const [messages, setMessage] = useState<Chat[]>([]);
   const [client, setClient] = useState<Client | null>(null);
   const [connectionStatus, setConnectionStatus] = useState<string>("Connecting...");
@@ -28,18 +27,27 @@ function ChatPage({ username } : ChatPageProps) {
 
   useEffect(() => {
     const newClient = new Client({ // Tạo một client mới
-      webSocketFactory: () => new SockJS("http://localhost:8080/ws"), // Kết nối đến server qua websocket
+      webSocketFactory: () => new SockJS(`http://localhost:8080/ws?userId=${username}`), // Kết
+      // nối đến
+      // server qua
+      // websocket
+      connectHeaders: {
+        "X-User-Id": `${username}`
+      },
       onConnect: () => { // Callback được gọi khi kết nối thành công
         console.log("Connected to server");
-        const joinMessage: Message = {
+        const joinMessage: Chat = {
           sender: username,
-          type: "CONNECT"
+          type: "CONNECT",
+          content: `${username} joined the chat`
         };
         newClient.publish({ // Gửi message lên server
-          destination: "/app/chat.addUser",
+          destination: "/app/chat.add-user",
           body: JSON.stringify(joinMessage)
         });
-        newClient.subscribe("/topic/public", (message) => { // Đăng ký để nhận message từ server
+        newClient.subscribe(`/topic/private/${roomId}`, (message) => { // Đăng ký để nhận
+          // message từ
+          // server
           const newMessage = JSON.parse(message.body);
           console.log("new message: ", newMessage);
           setMessage(prev => [...prev, newMessage])
@@ -49,12 +57,13 @@ function ChatPage({ username } : ChatPageProps) {
       onDisconnect: () => { // Callback được gọi khi client bị ngắt kết nối
         console.log("Disconnected from server");
         if (newClient.connected) {
-          const leaveMessage: Message = {
+          const leaveMessage: Chat = {
             sender: username,
-            type: "DISCONNECT"
+            type: "DISCONNECT",
+            content: `${username} left the chat`
           };
           newClient.publish({ // Gửi message lên server
-            destination: "/app/chat.addUser",
+            destination: "/app/chat.add-user",
             body: JSON.stringify(leaveMessage)
           });
         }
@@ -91,11 +100,12 @@ function ChatPage({ username } : ChatPageProps) {
       const chatMessage: Chat = {
         sender: username,
         content: messageInputRef.current!.value,
-        type: "CHAT"
+        type: "CHAT",
+        receiver: roomId
       };
       console.log(chatMessage);
       client.publish({
-        destination: "/app/chat.send-message",
+        destination: "/app/chat.send-private-message",
         body: JSON.stringify(chatMessage)
       }); // Gửi message lên server
       messageInputRef.current!.value = ""; // Xóa nội dung trong input sau khi gửi

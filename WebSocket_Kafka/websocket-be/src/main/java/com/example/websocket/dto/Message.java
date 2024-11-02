@@ -13,6 +13,7 @@ public class Message {
   private MessageType messageType;
   private String content;
   private String sender;
+  private String receiver;
   private String sessionId;
 
   public static enum MessageType {
