@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.didan.microservices</groupId>
-	<artifactId>gatewaysever</artifactId>
+	<artifactId>gateway-server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>gatewaysever</name>
@@ -30,7 +30,6 @@
 	<properties>
 		<java.version>17</java.version>
 		<spring-cloud.version>2023.0.2</spring-cloud.version>
-		<otelVersion>1.32.0</otelVersion>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -52,12 +51,6 @@
 		<dependency>
 			<groupId>io.micrometer</groupId>
 			<artifactId>micrometer-registry-prometheus</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.opentelemetry.javaagent</groupId>
-			<artifactId>opentelemetry-javaagent</artifactId>
-			<version>${otelVersion}</version>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
@@ -116,7 +109,7 @@
 						<image>eclipse-temurin:21-jre</image>
 					</from>
 					<to>
-						<image>dannguyenmessi/${project.artifactId}:v1</image>
+						<image>dannguyenmessi/forum-${project.artifactId}:v2</image>
 					</to>
 				</configuration>
 			</plugin>
