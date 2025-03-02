@@ -1,0 +1,11 @@
+services:
+  db:
+    image: mariadb:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: migrate_flyway
+      MYSQL_USER: didannguyen
+      MYSQL_PASSWORD: 17052002
+    ports:
+      - "3307:3306"

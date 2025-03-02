@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: Migrate-Flyway_Spring
+  datasource:
+    url: jdbc:mariadb://localhost:3307/migrate_flyway
+    username: didannguyen
+    password: 17052002
+    driver-class-name: org.mariadb.jdbc.Driver
+  flyway:
+    baseline-on-migrate: true
+    enabled: true
+    locations: classpath:db/migration
