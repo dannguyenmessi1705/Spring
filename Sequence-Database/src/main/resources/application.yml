@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: Sequence-Database
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3307/sequence
+    username: didannguyen
+    password: 17052002
