@@ -1,0 +1,19 @@
+services:
+  vault:
+    image: hashicorp/vault:1.18.3
+    container_name: vault
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: root # Token để truy cập vào vault
+      VAULT_DEV_LISTEN_ADDRESS: "0.0.0.0:8200" # Địa chỉ của vault server
+      VAULT_LOCAL_CONFIG: | # Cấu hình để bật giao diện web của vault
+        {
+          "ui": true,
+        } 
+    ports:
+      - "8200:8200"
+    cap_add:
+      - IPC_LOCK # Cấp quyền để vault có thể sử dụng memory lock (để lưu trữ dữ liệu)
+    volumes:
+      - ./vault-init.sh:/vault-init.sh
+      - ./policy.hcl:/policy.hcl
+    entrypoint: ["/bin/sh", "-c", "/vault-init.sh"]

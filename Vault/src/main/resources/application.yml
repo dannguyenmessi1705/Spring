@@ -1,0 +1,40 @@
+spring:
+  cloud:
+    vault:
+      enabled: true # B?t tích h?p v?i Vault
+      authentication: approle # Ph??ng th?c xác th?c (token, approle, kubernetes, ...)
+      app-role: # C?u hình AppRole
+        role-id: 41ca3cab-ec9c-f72b-43af-3af3a9693f09
+        secret-id: 90311fd4-1f2b-1174-baad-f8c1b0f2c8bf
+      host: localhost # ??a ch? c?a Vault
+      port: 8200 # C?ng c?a Vault
+      scheme: http # Giao th?c truy c?p
+      fail-fast: true # Làm cho ?ng d?ng b? l?i n?u không th? k?t n?i v?i Vault
+      config:
+        lifecycle:
+          enabled: true # B?t c?u hình lifecycle ?? t? ??ng c?p nh?t c?u hình t? Vault
+      generic:
+        enabled: false
+    config:
+      enabled: false
+  application:
+    name: vault-spring-boot
+
+app:
+  vaultConfigs:
+    - partner-code: BIDV
+      vault-key-path: /v1/kv/data/switching-bidv
+      private-key-name: dan-private-key
+      partner-public-key-name: partner-public-key
+    - partner-code: VIETINBANK
+      vault-key-path: /v1/kv/data/switching-vietinbank
+      private-key-name: dan-private-key
+      partner-public-key-name: partner-public-key
+    - partner-code: VPB
+      vault-key-path: /v1/kv/data/switching-vpb
+      private-key-name: dan-private-key
+      partner-public-key-name: partner-public-key
+    - partner-code: VBA
+      vault-key-path: /v1/kv/data/switching-vba
+      private-key-name: dan-private-key
+      partner-public-key-name: partner-public-key
