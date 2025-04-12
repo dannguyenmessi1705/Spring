@@ -1,0 +1,42 @@
+syntax = "proto3"; // Phiên bản giao thức protobuf (Protocol Buffers) được sử dụng
+
+package com.didan; // Tên gói (package) cho các thông điệp trong tệp này (sử dụng để tổ chức mã nguồn)
+
+option java_multiple_files = true; // Tùy chọn để tạo nhiều tệp Java cho các thông điệp trong tệp này
+
+/*
+Các trường trong thông điệp được định nghĩa với cú pháp:
+<type> <field_name> = <field_number>;
+- <type>: Kiểu dữ liệu của trường (int32, string, float, v.v.)
+- <field_name>: Tên của trường (tên biến)
+- <field_number>: Số thứ tự của trường trong thông điệp (số nguyên dương)
+*/
+
+// Định nghĩa một thông điệp (message) có tên là Author
+message Book {
+  int32 book_id = 1; // ID của sách (kiểu số nguyên 32 bit)
+  string title = 2; // Tiêu đề của sách (kiểu chuỗi)
+  float price = 3; // Giá của sách (kiểu số thực)
+  int32 pages = 4; // Số trang của sách (kiểu số nguyên 32 bit)
+  int32 author_id = 5; // ID của tác giả (kiểu số nguyên 32 bit)
+}
+
+// Định nghĩa một thông điệp (message) có tên là Author
+message Author {
+  int32 author_id = 1; // ID của tác giả (kiểu số nguyên 32 bit)
+  string first_name = 2; // Tên của tác giả (kiểu chuỗi)
+  string last_name = 3; // Họ của tác giả (kiểu chuỗi)
+  string gender = 4; // Giới tính của tác giả (kiểu chuỗi)
+  int32 book_id = 5; // ID của sách (kiểu số nguyên 32 bit)
+}
+
+// Định nghĩa service (dịch vụ) để thực hiện các thao tác
+
+service BookAuthorService {
+  // unary - synchronous (Đơn hướng tạo 1 response cho 1 request - đồng bộ)
+  rpc getAuthor(Author) returns(Author) {}
+
+  // server-streaming - asynchronous (Đơn hướng tạo nhiều response cho 1 request - bất đồng bộ)
+  // client-streaming - asynchronous (Đơn hướng tạo nhiều request cho 1 response - bất đồng bộ)
+  // bi-directional-streaming - asynchronous (Đơn hướng tạo nhiều request và response - bất đồng bộ)
+}
