@@ -144,7 +144,7 @@ public class RedissonCacheConfig implements CachingConfigurer {
    * Ngoài ra, có thể sử dụng @Cacheable(value="namefunc", key="#name", sync=true) trên method để cache kết quả trả về của method ví dụ như method này
    * Trong đó:
    * * value: Tên cache
-   * * key: Biến sẽ nhận giá trị truyền vào từ method
+   * * key: Key dùng để lưu cache, sử dụng SpEL expression
    * * sync: Đồng bộ cache giúp tránh việc nhiều thread cùng truy cập cache cùng một lúc
    * Ví dụ:
    * @Cacheable(value="namefunc", key="#name", sync=true)
