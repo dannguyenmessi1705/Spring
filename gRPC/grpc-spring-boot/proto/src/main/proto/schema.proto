@@ -36,7 +36,14 @@ service BookAuthorService {
   // unary - synchronous (Đơn hướng tạo 1 response cho 1 request - đồng bộ)
   rpc getAuthor(Author) returns(Author) {}
 
-  // server-streaming - asynchronous (Đơn hướng tạo nhiều response cho 1 request - bất đồng bộ)
-  // client-streaming - asynchronous (Đơn hướng tạo nhiều request cho 1 response - bất đồng bộ)
-  // bi-directional-streaming - asynchronous (Đơn hướng tạo nhiều request và response - bất đồng bộ)
+  // server-streaming - asynchronous (Client sẽ gửi 1 request và server sẽ
+  // trả về với 1 stream response - bất đồng bộ)
+  rpc getBooksByAuthor(Author) returns(stream Book) {}
+
+  // client-streaming - asynchronous (Client sẽ gửi một stream request và server sẽ trả về với 1 response - bất đồng bộ)
+  rpc getExpensiveBook(stream Book) returns(Book) {}
+
+  // bi-directional-streaming - asynchronous (Client sẽ gửi một stream request và server sẽ trả về với một stream response - bất đồng bộ)
+  rpc getBookByAuthorGender(stream Book) returns(stream Book) {}
+
 }
