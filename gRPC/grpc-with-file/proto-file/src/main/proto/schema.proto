@@ -1,0 +1,33 @@
+syntax = "proto3"; // Sử dụng proto3 làm định dạng
+
+option java_multiple_files = true; // Tạo nhiều tệp Java cho mỗi tệp proto
+
+package com.didan.grpc.file; // Đặt tên gói cho các tệp Java được tạo
+
+message File {
+  bytes content = 1; // Nội dung tệp dưới dạng byte (Chứa nội dung tệp mà client gửi lên)
+}
+
+message FileUploadRequest {
+  File file = 1; // Tệp được tải lên
+}
+
+enum UploadStatus {
+  SUCCESS = 0; // Tải lên thành công
+  FAILED = 1; // Tải lên thất bại
+}
+
+message FileUploadResponse {
+  string fileName = 1; // Tên tệp đã tải lên
+  UploadStatus uploadStatus = 2; // Trạng thái tải lên
+}
+
+message FileMetadta {
+  string fileNameWithType = 1; // Tên tệp với loại tệp
+  int32 contentLength = 2; // Độ dài nội dung tệp
+}
+
+service FileUploadService {
+  rpc uploadFile (stream FileUploadRequest) returns (FileUploadResponse); //
+  // Định nghĩa phương thức uploadFile, sử dụng stream để gửi file có thể lớn
+}
