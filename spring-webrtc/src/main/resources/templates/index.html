@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebRTC Video Call</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2.5rem;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .connection-section {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    label {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    input[type="text"] {
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      font-size: 1rem;
+      min-width: 200px;
+    }
+
+    input[type="text"]::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 120px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(45deg, #4ecdc4, #44a08d);
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(78, 205, 196, 0.4);
+    }
+
+    .btn-danger {
+      background: linear-gradient(45deg, #ff4757, #ff6b7a);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 71, 87, 0.4);
+    }
+
+    .video-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .video-wrapper {
+      position: relative;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+      overflow: hidden;
+      aspect-ratio: 16/9;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .video-label {
+      position: absolute;
+      top: 10px;
+      left: 15px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      z-index: 10;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .status {
+      text-align: center;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+
+    .status.connected {
+      background: rgba(40, 167, 69, 0.3);
+      color: #28a745;
+    }
+
+    .status.disconnected {
+      background: rgba(220, 53, 69, 0.3);
+      color: #dc3545;
+    }
+
+    .status.connecting {
+      background: rgba(255, 193, 7, 0.3);
+      color: #ffc107;
+    }
+
+    .users-list {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .users-list h3 {
+      margin-bottom: 10px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .user-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 5px;
+      margin-bottom: 5px;
+    }
+
+    .user-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .chat-container {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .chat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chat-tabs {
+      display: flex;
+      gap: 10px;
+    }
+
+    .chat-tab {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .chat-tab.active {
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    .chat-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow-y: auto;
+      max-height: 300px;
+    }
+
+    .chat-messages, .private-chat-messages {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .chat-message {
+      padding: 10px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      max-width: 80%;
+      align-self: flex-start;
+    }
+
+    .chat-message.self {
+      background: rgba(78, 205, 196, 0.6);
+      align-self: flex-end;
+    }
+
+    .chat-input-section {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .chat-input-wrapper {
+      display: flex;
+      flex: 1;
+      gap: 10px;
+    }
+
+    select, input[type="text"] {
+      flex: 1;
+    }
+
+    @media (max-width: 768px) {
+      .video-container {
+        grid-template-columns: 1fr;
+      }
+
+      .connection-section {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .controls {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>🎥 WebRTC Video Call</h1>
+
+  <div class="connection-section">
+    <div class="input-group">
+      <label for="username">Tên người dùng:</label>
+      <input type="text" id="username" placeholder="Nhập tên của bạn" />
+    </div>
+    <div class="input-group">
+      <label for="roomId">Mã phòng:</label>
+      <input type="text" id="roomId" placeholder="Nhập mã phòng" />
+    </div>
+    <button id="connectBtn" class="btn-primary">Kết nối</button>
+    <button id="disconnectBtn" class="btn-danger hidden">Ngắt kết nối</button>
+  </div>
+
+  <div id="status" class="status disconnected">
+    Chưa kết nối
+  </div>
+
+  <div id="usersSection" class="users-list hidden">
+    <h3>Người dùng trong phòng:</h3>
+    <div id="usersList"></div>
+  </div>
+
+  <div class="video-container">
+    <div class="video-wrapper">
+      <div class="video-label">Camera của bạn</div>
+      <video id="localVideo" autoplay muted></video>
+    </div>
+    <div class="video-wrapper">
+      <div class="video-label">Người khác</div>
+      <video id="remoteVideo" autoplay></video>
+    </div>
+  </div>
+
+  <div class="chat-container hidden" id="chatContainer">
+    <div class="chat-header">
+      <h3>💬 Chat</h3>
+      <div class="chat-tabs">
+        <button class="chat-tab active" data-tab="room">Phòng</button>
+        <button class="chat-tab" data-tab="private">Riêng tư</button>
+      </div>
+    </div>
+
+    <div class="chat-content">
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="private-chat-messages hidden" id="privateChatMessages"></div>
+    </div>
+
+    <div class="chat-input-section">
+      <div class="chat-input-wrapper">
+        <select id="privateUserSelect" class="hidden">
+          <option value="">Chọn người nhận...</option>
+        </select>
+        <input type="text" id="chatInput" placeholder="Nhập tin nhắn..." maxlength="500">
+        <button id="sendChatBtn">Gửi</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="startCallBtn" class="btn-secondary hidden">Bắt đầu cuộc gọi</button>
+    <button id="endCallBtn" class="btn-danger hidden">Kết thúc cuộc gọi</button>
+    <button id="toggleVideoBtn" class="btn-secondary">Bật/Tắt Camera</button>
+    <button id="toggleAudioBtn" class="btn-secondary">Bật/Tắt Mic</button>
+    <button id="toggleChatBtn" class="btn-secondary hidden">💬 Chat</button>
+  </div>
+</div>
+
+<script>
+  class WebRTCClient {
+    constructor() {
+      this.stompClient = null;
+      this.localStream = null;
+      this.remoteStream = null;
+      this.peerConnection = null;
+      this.isConnected = false;
+      this.currentRoom = null;
+      this.currentUser = null;
+      this.remoteUser = null;
+      this.users = new Set();
+
+      this.setupUI();
+      this.setupWebRTC();
+    }
+
+    setupUI() {
+      // UI Event listeners
+      document.getElementById('connectBtn').addEventListener('click', () => this.connect());
+      document.getElementById('disconnectBtn').addEventListener('click', () => this.disconnect());
+      document.getElementById('startCallBtn').addEventListener('click', () => this.startCall());
+      document.getElementById('endCallBtn').addEventListener('click', () => this.endCall());
+      document.getElementById('toggleVideoBtn').addEventListener('click', () => this.toggleVideo());
+      document.getElementById('toggleAudioBtn').addEventListener('click', () => this.toggleAudio());
+      document.getElementById('toggleChatBtn').addEventListener('click', () => this.toggleChat());
+      document.getElementById('sendChatBtn').addEventListener('click', () => this.sendChatMessage());
+      document.getElementById('privateUserSelect').addEventListener('change', (e) => this.selectPrivateUser(e));
+      document.getElementById('chatInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          this.sendChatMessage();
+        }
+      });
+
+      // Chat tab event listeners
+      document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('chat-tab')) {
+          const tabType = e.target.getAttribute('data-tab');
+          this.switchChatTab(tabType);
+        }
+      });
+    }
+
+    async setupWebRTC() {
+      try {
+        // Kiểm tra xem getUserMedia có được hỗ trợ không
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          throw new Error('getUserMedia không được hỗ trợ trong trình duyệt này');
+        }
+
+        console.log('Đang yêu cầu quyền truy cập camera và microphone...');
+
+        // Thử lấy user media với các constraint khác nhau
+        let mediaConstraints = {
+          video: {
+            width: { ideal: 1280 },
+            height: { ideal: 720 },
+            facingMode: 'user'
+          },
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true
+          }
+        };
+
+        try {
+          // Thử với constraint đầy đủ
+          this.localStream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
+        } catch (error) {
+          console.warn('Không thể lấy media với constraint đầy đủ, thử với constraint đơn giản hơn:', error);
+
+          // Thử với constraint đơn giản hơn
+          try {
+            this.localStream = await navigator.mediaDevices.getUserMedia({
+              video: true,
+              audio: true
+            });
+          } catch (error2) {
+            console.warn('Không thể lấy cả video và audio, thử chỉ với video:', error2);
+
+            // Thử chỉ với video
+            try {
+              this.localStream = await navigator.mediaDevices.getUserMedia({
+                video: true,
+                audio: false
+              });
+              console.warn('Chỉ có thể lấy video, không có audio');
+            } catch (error3) {
+              console.warn('Không thể lấy video, thử chỉ với audio:', error3);
+
+              // Thử chỉ với audio
+              try {
+                this.localStream = await navigator.mediaDevices.getUserMedia({
+                  video: false,
+                  audio: true
+                });
+                console.warn('Chỉ có thể lấy audio, không có video');
+              } catch (error4) {
+                throw new Error('Không thể truy cập camera hoặc microphone. Vui lòng kiểm tra thiết bị và quyền truy cập.');
+              }
+            }
+          }
+        }
+
+        // Hiển thị local stream
+        const localVideo = document.getElementById('localVideo');
+        localVideo.srcObject = this.localStream;
+
+        // Cấu hình ICE servers
+        const configuration = {
+          iceServers: [
+            { urls: 'stun:stun.l.google.com:19302' },
+            { urls: 'stun:stun1.l.google.com:19302' }
+          ]
+        };
+
+        this.peerConnection = new RTCPeerConnection(configuration);
+
+        // Thêm local stream vào peer connection
+        this.localStream.getTracks().forEach(track => {
+          this.peerConnection.addTrack(track, this.localStream);
+        });
+
+        // Xử lý remote stream
+        this.peerConnection.ontrack = (event) => {
+          this.remoteStream = event.streams[0];
+          document.getElementById('remoteVideo').srcObject = this.remoteStream;
+        };
+
+        // Xử lý ICE candidates
+        this.peerConnection.onicecandidate = (event) => {
+          if (event.candidate && this.remoteUser) {
+            this.sendMessage('/app/ice-candidate', {
+              type: 'ICE_CANDIDATE',
+              to: this.remoteUser,
+              data: event.candidate
+            });
+          }
+        };
+
+        // Xử lý connection state changes
+        this.peerConnection.onconnectionstatechange = () => {
+          console.log('Connection state:', this.peerConnection.connectionState);
+        };
+
+        console.log('WebRTC setup completed successfully');
+
+      } catch (error) {
+        console.error('Lỗi khi thiết lập WebRTC:', error);
+        this.updateStatus(`Lỗi: ${error.message}`, 'disconnected');
+
+        // Tạo peer connection ngay cả khi không có media stream
+        // để vẫn có thể nhận cuộc gọi
+        try {
+          const configuration = {
+            iceServers: [
+              { urls: 'stun:stun.l.google.com:19302' },
+              { urls: 'stun:stun1.l.google.com:19302' }
+            ]
+          };
+
+          this.peerConnection = new RTCPeerConnection(configuration);
+
+          // Xử lý remote stream
+          this.peerConnection.ontrack = (event) => {
+            this.remoteStream = event.streams[0];
+            document.getElementById('remoteVideo').srcObject = this.remoteStream;
+          };
+
+          // Xử lý ICE candidates
+          this.peerConnection.onicecandidate = (event) => {
+            if (event.candidate && this.remoteUser) {
+              this.sendMessage('/app/ice-candidate', {
+                type: 'ICE_CANDIDATE',
+                to: this.remoteUser,
+                data: event.candidate
+              });
+            }
+          };
+
+          console.log('Peer connection created without media stream');
+        } catch (peerError) {
+          console.error('Failed to create peer connection:', peerError);
+        }
+      }
+    }
+
+    connect() {
+      const username = document.getElementById('username').value.trim();
+      const roomId = document.getElementById('roomId').value.trim();
+
+      if (!username || !roomId) {
+        alert('Vui lòng nhập tên người dùng và mã phòng');
+        return;
+      }
+
+      this.currentUser = username;
+      this.currentRoom = roomId;
+
+      this.updateStatus('Đang kết nối...', 'connecting');
+
+      // Kết nối WebSocket
+      const socket = new SockJS('/ws');
+      this.stompClient = Stomp.over(socket);
+
+      // Set connect headers properly for STOMP
+      const connectHeaders = {};
+      connectHeaders['X-Username'] = username;
+
+      this.stompClient.connect(connectHeaders, () => {
+        this.onConnected();
+      }, (error) => {
+        this.onConnectionError(error);
+      });
+    }
+
+    onConnected() {
+      this.isConnected = true;
+      this.updateStatus('Đã kết nối', 'connected');
+
+      // Subscribe to room messages
+      this.stompClient.subscribe(`/topic/room/${this.currentRoom}`, (message) => {
+        this.handleRoomMessage(JSON.parse(message.body));
+      });
+
+      // Subscribe to WebRTC messages
+      this.stompClient.subscribe(`/user/queue/webrtc`, (message) => {
+        this.handleWebRTCMessage(JSON.parse(message.body));
+      });
+
+      // Subscribe to room users
+      this.stompClient.subscribe(`/user/queue/room-users`, (message) => {
+        this.handleRoomUsers(JSON.parse(message.body));
+      });
+
+      // Subscribe to room chat messages
+      this.stompClient.subscribe(`/topic/room/${this.currentRoom}/chat`, (message) => {
+        this.handleRoomChat(JSON.parse(message.body));
+      });
+
+      // Subscribe to private chat messages
+      this.stompClient.subscribe(`/user/queue/chat`, (message) => {
+        this.handlePrivateChat(JSON.parse(message.body));
+      });
+
+      // Join room
+      this.sendMessage('/app/join', { roomId: this.currentRoom });
+
+      this.updateUI();
+    }
+
+    onConnectionError(error) {
+      console.error('Lỗi kết nối WebSocket:', error);
+      this.updateStatus('Lỗi kết nối', 'disconnected');
+    }
+
+    disconnect() {
+      if (this.stompClient) {
+        this.sendMessage('/app/leave', { roomId: this.currentRoom });
+        this.stompClient.disconnect();
+      }
+
+      this.endCall();
+      this.isConnected = false;
+      this.currentRoom = null;
+      this.currentUser = null;
+      this.users.clear();
+
+      this.updateStatus('Đã ngắt kết nối', 'disconnected');
+      this.updateUI();
+    }
+
+    sendMessage(destination, message) {
+      if (this.stompClient && this.isConnected) {
+        this.stompClient.send(destination, {}, JSON.stringify(message));
+      }
+    }
+
+    handleRoomMessage(message) {
+      if (message.type === 'USER_JOINED') {
+        this.users.add(message.username);
+        this.updateUsersList();
+
+        if (message.username !== this.currentUser) {
+          console.log(`${message.username} đã tham gia phòng`);
+        }
+      } else if (message.type === 'USER_LEFT') {
+        this.users.delete(message.username);
+        this.updateUsersList();
+
+        if (message.username === this.remoteUser) {
+          this.endCall();
+        }
+      }
+    }
+
+    handleRoomUsers(message) {
+      this.users = new Set(message.users);
+      this.updateUsersList();
+    }
+
+    handleWebRTCMessage(message) {
+      switch (message.type) {
+        case 'OFFER':
+          this.handleOffer(message);
+          break;
+        case 'ANSWER':
+          this.handleAnswer(message);
+          break;
+        case 'ICE_CANDIDATE':
+          this.handleIceCandidate(message);
+          break;
+      }
+    }
+
+    async handleOffer(message) {
+      this.remoteUser = message.from;
+
+      try {
+        await this.peerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
+        const answer = await this.peerConnection.createAnswer();
+        await this.peerConnection.setLocalDescription(answer);
+
+        this.sendMessage('/app/answer', {
+          type: 'ANSWER',
+          to: message.from,
+          data: answer
+        });
+
+        this.updateCallUI(true);
+      } catch (error) {
+        console.error('Lỗi khi xử lý offer:', error);
+      }
+    }
+
+    async handleAnswer(message) {
+      try {
+        await this.peerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
+        this.updateCallUI(true);
+      } catch (error) {
+        console.error('Lỗi khi xử lý answer:', error);
+      }
+    }
+
+    async handleIceCandidate(message) {
+      try {
+        await this.peerConnection.addIceCandidate(new RTCIceCandidate(message.data));
+      } catch (error) {
+        console.error('Lỗi khi xử lý ICE candidate:', error);
+      }
+    }
+
+    async startCall() {
+      const availableUsers = Array.from(this.users).filter(user => user !== this.currentUser);
+
+      if (availableUsers.length === 0) {
+        alert('Không có người dùng nào khác trong phòng');
+        return;
+      }
+
+      // Kiểm tra và tạo lại peer connection nếu cần
+      if (!this.peerConnection) {
+        console.log('Peer connection is null, recreating...');
+        await this.setupWebRTC();
+      }
+
+      // Kiểm tra lại sau khi setup
+      if (!this.peerConnection) {
+        console.error('Failed to create peer connection');
+        alert('Không thể khởi tạo kết nối WebRTC. Vui lòng thử lại.');
+        return;
+      }
+
+      // Chọn user đầu tiên (có thể mở rộng để cho phép chọn)
+      this.remoteUser = availableUsers[0];
+
+      try {
+        const offer = await this.peerConnection.createOffer();
+        await this.peerConnection.setLocalDescription(offer);
+
+        this.sendMessage('/app/offer', {
+          type: 'OFFER',
+          to: this.remoteUser,
+          data: offer
+        });
+
+        this.updateCallUI(true);
+      } catch (error) {
+        console.error('Lỗi khi bắt đầu cuộc gọi:', error);
+        alert('Lỗi khi bắt đầu cuộc gọi: ' + error.message);
+      }
+    }
+
+    endCall() {
+      if (this.peerConnection) {
+        this.peerConnection.close();
+        this.setupWebRTC(); // Tạo lại peer connection
+      }
+
+      this.remoteUser = null;
+      document.getElementById('remoteVideo').srcObject = null;
+      this.updateCallUI(false);
+    }
+
+    toggleVideo() {
+      if (this.localStream) {
+        const videoTrack = this.localStream.getVideoTracks()[0];
+        if (videoTrack) {
+          videoTrack.enabled = !videoTrack.enabled;
+          const btn = document.getElementById('toggleVideoBtn');
+          btn.textContent = videoTrack.enabled ? 'Tắt Camera' : 'Bật Camera';
+        }
+      }
+    }
+
+    toggleAudio() {
+      if (this.localStream) {
+        const audioTrack = this.localStream.getAudioTracks()[0];
+        if (audioTrack) {
+          audioTrack.enabled = !audioTrack.enabled;
+          const btn = document.getElementById('toggleAudioBtn');
+          btn.textContent = audioTrack.enabled ? 'Tắt Mic' : 'Bật Mic';
+        }
+      }
+    }
+
+    toggleChat() {
+      const chatContainer = document.getElementById('chatContainer');
+      const isVisible = !chatContainer.classList.contains('hidden');
+      chatContainer.classList.toggle('hidden', isVisible);
+
+      const btn = document.getElementById('toggleChatBtn');
+      btn.textContent = isVisible ? '💬 Chat' : '📞 Cuộc gọi';
+    }
+
+    sendChatMessage() {
+      const messageInput = document.getElementById('chatInput');
+      const message = messageInput.value.trim();
+
+      if (!message) {
+        return;
+      }
+
+      const privateUserSelect = document.getElementById('privateUserSelect');
+      const isPrivateChat = !privateUserSelect.classList.contains('hidden');
+
+      // Room chat
+      if (!isPrivateChat) {
+        this.sendMessage('/app/chat/room', {
+          type: 'ROOM_CHAT',
+          roomId: this.currentRoom,
+          content: message
+        });
+      }
+      // Private chat
+      else {
+        const recipient = privateUserSelect.value;
+        if (!recipient) {
+          alert('Vui lòng chọn người nhận tin nhắn');
+          return;
+        }
+
+        this.sendMessage('/app/chat/private', {
+          type: 'PRIVATE_CHAT',
+          to: recipient,
+          content: message
+        });
+      }
+
+      messageInput.value = '';
+      messageInput.focus();
+    }
+
+    handleRoomChat(message) {
+      const chatMessages = document.getElementById('chatMessages');
+      const messageElement = document.createElement('div');
+      messageElement.className = `chat-message ${message.from === this.currentUser ? 'self' : ''}`;
+
+      const timestamp = new Date(message.timestamp).toLocaleTimeString();
+      messageElement.innerHTML = `
+        <div style="font-size: 0.8em; color: rgba(255,255,255,0.7); margin-bottom: 5px;">
+          ${message.from} - ${timestamp}
+        </div>
+        <div>${message.content}</div>
+      `;
+
+      chatMessages.appendChild(messageElement);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    handlePrivateChat(message) {
+      const privateChatMessages = document.getElementById('privateChatMessages');
+      const messageElement = document.createElement('div');
+      messageElement.className = `chat-message ${message.from === this.currentUser ? 'self' : ''}`;
+
+      const timestamp = new Date(message.timestamp).toLocaleTimeString();
+      const displayName = message.from === this.currentUser ? 'Bạn' : message.from;
+      const targetName = message.to === this.currentUser ? 'Bạn' : message.to;
+
+      messageElement.innerHTML = `
+        <div style="font-size: 0.8em; color: rgba(255,255,255,0.7); margin-bottom: 5px;">
+          ${displayName} → ${targetName} - ${timestamp}
+        </div>
+        <div>${message.content}</div>
+      `;
+
+      privateChatMessages.appendChild(messageElement);
+      privateChatMessages.scrollTop = privateChatMessages.scrollHeight;
+    }
+
+    selectPrivateUser(event) {
+      const recipient = event.target.value;
+      const privateChatMessages = document.getElementById('privateChatMessages');
+
+      // Chuyển đổi tab chat
+      this.switchChatTab(recipient ? 'private' : 'room');
+    }
+
+    switchChatTab(tabType) {
+      const roomTab = document.querySelector('[data-tab="room"]');
+      const privateTab = document.querySelector('[data-tab="private"]');
+      const chatMessages = document.getElementById('chatMessages');
+      const privateChatMessages = document.getElementById('privateChatMessages');
+      const privateUserSelect = document.getElementById('privateUserSelect');
+
+      if (tabType === 'room') {
+        roomTab.classList.add('active');
+        privateTab.classList.remove('active');
+        chatMessages.classList.remove('hidden');
+        privateChatMessages.classList.add('hidden');
+        privateUserSelect.classList.add('hidden');
+      } else {
+        privateTab.classList.add('active');
+        roomTab.classList.remove('active');
+        chatMessages.classList.add('hidden');
+        privateChatMessages.classList.remove('hidden');
+        privateUserSelect.classList.remove('hidden');
+      }
+    }
+
+    updateStatus(message, type) {
+      const statusElement = document.getElementById('status');
+      statusElement.textContent = message;
+      statusElement.className = `status ${type}`;
+    }
+
+    updateUI() {
+      const connectBtn = document.getElementById('connectBtn');
+      const disconnectBtn = document.getElementById('disconnectBtn');
+      const usersSection = document.getElementById('usersSection');
+      const startCallBtn = document.getElementById('startCallBtn');
+      const toggleChatBtn = document.getElementById('toggleChatBtn');
+
+      if (this.isConnected) {
+        connectBtn.classList.add('hidden');
+        disconnectBtn.classList.remove('hidden');
+        usersSection.classList.remove('hidden');
+        startCallBtn.classList.remove('hidden');
+        toggleChatBtn.classList.remove('hidden');
+      } else {
+        connectBtn.classList.remove('hidden');
+        disconnectBtn.classList.add('hidden');
+        usersSection.classList.add('hidden');
+        startCallBtn.classList.add('hidden');
+        toggleChatBtn.classList.add('hidden');
+      }
+    }
+
+    updateCallUI(inCall) {
+      const startCallBtn = document.getElementById('startCallBtn');
+      const endCallBtn = document.getElementById('endCallBtn');
+
+      if (inCall) {
+        startCallBtn.classList.add('hidden');
+        endCallBtn.classList.remove('hidden');
+      } else {
+        startCallBtn.classList.remove('hidden');
+        endCallBtn.classList.add('hidden');
+      }
+    }
+
+    updateUsersList() {
+      const usersList = document.getElementById('usersList');
+      usersList.innerHTML = '';
+
+      this.users.forEach(user => {
+        const userItem = document.createElement('div');
+        userItem.className = 'user-item';
+        userItem.innerHTML = `
+                        <span>${user} ${user === this.currentUser ? '(Bạn)' : ''}</span>
+                        ${user !== this.currentUser ? '<button class="btn-secondary" onclick="webrtc.remoteUser = \'' + user + '\'; webrtc.startCall()">Gọi</button>' : ''}
+                    `;
+        usersList.appendChild(userItem);
+      });
+
+      // Update private chat user select dropdown
+      this.updatePrivateUserSelect();
+    }
+
+    async updatePrivateUserSelect() {
+      const privateUserSelect = document.getElementById('privateUserSelect');
+
+      if (!this.currentRoom) {
+        return;
+      }
+
+      try {
+        // Fetch users from API
+        const response = await fetch(`/api/webrtc/rooms/${this.currentRoom}/users`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const users = await response.json();
+
+        // Clear existing options except the first one
+        privateUserSelect.innerHTML = '<option value="">Chọn người nhận...</option>';
+
+        // Add users to dropdown (exclude current user)
+        users.forEach(user => {
+          if (user !== this.currentUser) {
+            const option = document.createElement('option');
+            option.value = user;
+            option.textContent = user;
+            privateUserSelect.appendChild(option);
+          }
+        });
+
+        console.log(`Updated private user select with ${users.length - 1} other users`);
+
+      } catch (error) {
+        console.error('Error fetching room users:', error);
+        // Fallback to using the users set from WebSocket
+        privateUserSelect.innerHTML = '<option value="">Chọn người nhận...</option>';
+        this.users.forEach(user => {
+          if (user !== this.currentUser) {
+            const option = document.createElement('option');
+            option.value = user;
+            option.textContent = user;
+            privateUserSelect.appendChild(option);
+          }
+        });
+      }
+    }
+  }
+
+  // Khởi tạo ứng dụng
+  const webrtc = new WebRTCClient();
+  window.webrtc = webrtc; // Để có thể truy cập từ console
+</script>
+</body>
+</html>
+<!-- This HTML file provides a simple WebRTC video call interface with user management and connection handling. -->

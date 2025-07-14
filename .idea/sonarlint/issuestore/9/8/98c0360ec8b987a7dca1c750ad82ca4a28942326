@@ -1,0 +1,20 @@
+
+F
+java:S1066²"/Merge this if statement with the enclosing one.(¸©şâ
+[	java:S112C"FDefine and throw a dedicated exception instead of using a generic one.(³§Úò
+[	java:S112R"FDefine and throw a dedicated exception instead of using a generic one.(…©íø
+`	java:S112f"FDefine and throw a dedicated exception instead of using a generic one.(Äµ¤İşÿÿÿÿ
+[	java:S112q"FDefine and throw a dedicated exception instead of using a generic one.(…©íø
+`	java:S112z"FDefine and throw a dedicated exception instead of using a generic one.(ÒÉØ¿øÿÿÿÿ
+\	java:S112‰"FDefine and throw a dedicated exception instead of using a generic one.(û¬Ï§
+a	java:S112–"FDefine and throw a dedicated exception instead of using a generic one.(Õâİúøÿÿÿÿ
+\	java:S112¤"FDefine and throw a dedicated exception instead of using a generic one.(ËÖ²«
+a	java:S112˜"FDefine and throw a dedicated exception instead of using a generic one.(íÜï¶ÿÿÿÿÿ
+a
+java:S1192–"JDefine a constant instead of duplicating this literal "available" 3 times.(ˆÏÉ
+]
+java:S1192‰"FDefine a constant instead of duplicating this literal "price" 4 times.(Â†ÇÁ
+e
+java:S1192ş"IDefine a constant instead of duplicating this literal "category" 3 times.(ŞÃÂûÿÿÿÿ
+i
+java:S3776¡"RRefactor this method to reduce its Cognitive Complexity from 19 to the 15 allowed.(ª½—‰
