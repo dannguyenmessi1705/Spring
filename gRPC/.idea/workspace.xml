@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d2595930-b8a2-4f64-8862-02f8c36cffbb" name="Changes" comment="" />
+    <list default="true" id="d2595930-b8a2-4f64-8862-02f8c36cffbb" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -28,6 +30,7 @@
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/messi/Documents/CODE/Spring/gRPC&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -71,6 +74,9 @@
       <workItem from="1744486625200" duration="1349000" />
       <workItem from="1744493897581" duration="35000" />
       <workItem from="1744494053004" duration="684000" />
+      <workItem from="1744559896448" duration="47000" />
+      <workItem from="1744560041651" duration="31000" />
+      <workItem from="1744646944152" duration="37000" />
     </task>
     <servers />
   </component>
