@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS logs_info (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    request_id VARCHAR(255) NOT NULL,
+    request_type VARCHAR(50) NOT NULL,
+    protocol_type VARCHAR(50) NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

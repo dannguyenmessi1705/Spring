@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package com.didan.testperformance;
+
+option java_multiple_files = true;
+option java_package = "com.didan.testperformance";
+option java_outer_classname = "SchemaProto";
+
+message Request {
+  string request_id = 1;
+  string message = 2;
+}
+
+enum Status {
+  SUCCESS = 0;
+  FAIL = 1;
+}
+
+message Response {
+  Status status = 1;
+}
+
+service RequestService {
+  rpc sendRequest(Request) returns (Response);
+}
