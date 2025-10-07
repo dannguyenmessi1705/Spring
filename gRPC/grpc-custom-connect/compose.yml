@@ -10,3 +10,43 @@ services:
       - "3307:3306"
     volumes:
       - ./db:/var/lib/mysql
+    networks:
+      - test-perf
+
+  first:
+    image: dannguyenmessi/first-test:v1
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/log
+      APP_REST_THIRD-URL: http://second:8081/api/v1/rest-api
+      APP_LOG_LOKI_HOST: loki
+      APP_LOG_LOKI_PORT: 3100
+      GRPC_CLIENT_HOST: second
+      GRPC_CLIENT_PORT: 9090
+      NETTY_SOCKET_CONNECTION_HOST: second
+      NETTY_SOCKET_CONNECTION_PORT: 9093
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mariadb
+    networks:
+      - test-perf
+
+  second:
+    image: dannguyenmessi/second-test:v1
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/log
+      APP_LOG_LOKI_HOST: loki
+      APP_LOG_LOKI_PORT: 3100
+      GRPC_SERVER_PORT: 9090
+      NETTY_SOCKET_SERVER_HOST: second
+      NETTY_SOCKET_SERVER_PORT: 9093
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mariadb
+    networks:
+      - test-perf
+
+networks:
+  test-perf:
+    driver: bridge

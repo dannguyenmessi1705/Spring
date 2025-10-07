@@ -21,10 +21,43 @@ spring:
 app:
   rest:
     third-url: http://localhost:8081/api/v1/rest-api
+  application-short-name: first
+  log:
+    loki:
+      host: localhost
+      port: 3100
 
 grpc:
-  client:
-    second:
-      address: static://localhost:9090
-  server:
+  xds-enabled: false # set to false if not using xDS
+  clients:
+    host: localhost
+    port: 9090
+    keep-alive-time: 10 # 10 seconds
+    keep-alive-without-calls: true # enable if behind load balancer
+    keep-alive-timeout: 10 # 10 seconds
+    xds-name-service: second:9090
+    deadlines:
+      default: 1500
+      getWallet: 1000
+      postingEntries: 3000
+      batchPostingEntries: 5000
+  servers:
+    keep-alive-time: 10 # 10 seconds
+    keep-alive-without-calls: true # enable if behind load balancer
+    keep-alive-timeout: 10 # 10 seconds
+    load-balancing-policy: round_robin # or pick_first
+    await-termination: 30 # 30 seconds
+    permit-keep-alive-time: 5 # 5 seconds
+    handshake-timeout: 10 # 10 seconds
+    max-inbound-message-size: 4194304 # 4MB
+    max-inbound-metadata-size: 8192 # 8KB
+    xds-bootstrap-config-path: classpath:bootstrap.json
     port: 9091
+
+netty:
+  socket:
+    connection:
+      waittimeout: 20000
+      host: localhost
+      port: 9093
+      mac-key: DD27E5A1364D71A48F66F2AEA0250374

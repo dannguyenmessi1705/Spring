@@ -48,6 +48,5 @@ public class LogsInfoEntity {
   @PrePersist
   public void getNow() {
     this.created_at = new Date();
-    this.requestId = DateUtil.dateToString(created_at, DateUtil.YYYYMMDDHHMMSSSSS);
   }
 }

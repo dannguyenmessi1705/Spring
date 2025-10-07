@@ -1,4 +1,4 @@
-package com.didan.testperformance.first.dto;
+package com.didan.testperformance.second.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -15,5 +15,6 @@ public class RequestDto {
   @NotNull
   private String message;
 
+  @NotNull
   private String requestId;
 }

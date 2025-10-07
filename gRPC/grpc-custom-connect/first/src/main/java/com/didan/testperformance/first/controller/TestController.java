@@ -32,7 +32,9 @@ public class TestController {
   }
 
   @PostMapping(value = "/socket", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<StatusEnum> testSocket() {
+  public ResponseEntity<StatusEnum> testSocket(@RequestBody @Valid RequestDto requestDto) {
+    log.info("testSocket start");
+    testPerformanceService.testPerformance(requestDto, ProtocolTypeEnum.SOCKET);
     return ResponseEntity.ok(StatusEnum.SUCCESS);
   }
 

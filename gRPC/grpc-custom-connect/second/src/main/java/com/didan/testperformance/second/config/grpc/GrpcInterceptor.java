@@ -1,4 +1,4 @@
-package com.didan.testperformance.first.config.grpc;
+package com.didan.testperformance.second.config.grpc;
 
 import io.grpc.CallOptions;
 import io.grpc.Channel;

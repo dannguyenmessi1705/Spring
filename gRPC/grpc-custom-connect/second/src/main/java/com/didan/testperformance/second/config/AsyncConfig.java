@@ -19,6 +19,7 @@ public class AsyncConfig {
     executor.setAllowCoreThreadTimeOut(true); // cho phép luồng lõi hết thời gian chờ
     executor.setKeepAliveSeconds(60); // thời gian chờ trước khi kết thúc luồng không hoạt động
     executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy()); // chính sách từ chối
+    executor.setTaskDecorator(new MdcTaskDecorator());
     executor.initialize();
     return executor;
   }

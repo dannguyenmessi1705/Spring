@@ -1,0 +1,25 @@
+{
+  "xds_servers": [
+    {
+      "server_uri": "172.20.0.5:80",
+      "channel_creds": [
+        {
+          "type": "insecure"
+        }
+      ]
+    }
+  ],
+  "node": {
+    "id": "first-service~127.0.0.1~first-service-1~local",
+    "cluster": "first-cluster",
+    "metadata": {
+      "TRAFFICDIRECTOR_NETWORKS": "default"
+    },
+    "locality": {
+      "region": "us-central1",
+      "zone": "us-central1-a",
+      "sub_zone": "first-subzone"
+    }
+  },
+  "server_listener_resource_name_template": "xds:///{{ node.id }"
+}

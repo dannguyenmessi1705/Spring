@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: first
+  namespace: istio-system
+  labels:
+    app: first
+    version: "0.0.1"
+    app.kubernetes.io/name: first
+    app.kubernetes.io/instance: first-1
+    app.kubernetes.io/version: "0.0.1"
+    app.kubernetes.io/component: first
+    app.kubernetes.io/part-of: test-performance
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: first
+      version: "0.0.1"
+      app.kubernetes.io/name: first
+      app.kubernetes.io/instance: first-1
+      app.kubernetes.io/version: "0.0.1"
+      app.kubernetes.io/component: first
+      app.kubernetes.io/part-of: test-performance
+  template:
+    metadata:
+      name: first
+      labels:
+        app: first
+        version: "0.0.1"
+        app.kubernetes.io/name: first
+        app.kubernetes.io/instance: first-1
+        app.kubernetes.io/version: "0.0.1"
+        app.kubernetes.io/component: first
+        app.kubernetes.io/part-of: test-performance
+      annotations:
+        inject.istio.io/templates: grpc-agent
+    spec:
+      containers:
+        - name: first
+          image: dannguyenmessi/first-service:v1 # Replace with your actual image
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mariadb://localhost:3306/log"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "test"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "12345678"
+            - name: GRPC_CLIENT_HOST
+              value: "localhost"
+            - name: GRPC_CLIENT_PORT
+              value: "9090"
+            - name: GRPC_CLIENT_XDS_NAME_SERVICE
+              value: "second:9090"
+            - name: SERVER_PORT
+              value: "8080"

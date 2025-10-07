@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info">
+
+  <Properties>
+    <Property name="PATTERN">
+      %d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} | %highlight{%-5level} | %cyan{%t} | %green{(%13F:%L)} | %notEmpty{RequestID=%yellow{%X{requestID}}} | %blue{%X{correlationID}} | %magenta{%X{clientIP}} | %msg%n
+    </Property>
+    <Property name="LOKI_PATTERN">
+      %msg
+    </Property>
+    <Property name="NAME">
+      ${spring:app.application-short-name:-DIDAN}
+    </Property>
+    <Property name="LOKI_HOST">
+      ${spring:app.log.loki.host:-localhost}
+    </Property>
+    <Property name="LOKI_PORT">
+      ${spring:app.log.loki.port:-3100}
+    </Property>
+    <property name="LOG_LEVEL">INFO</property>
+    <Property name="SECRET_REGEX">(?&lt;=\"(?:password|pin|token|loginToken|accessToken|sessionToken|refreshToken)\"\s{0,1}:\s{0,1}\")[^\"]+(?=\")</Property>
+  </Properties>
+
+  <Appenders>
+
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="${PATTERN}"/>
+    </Console>
+
+    <Console name="RegexConsole" target="SYSTEM_OUT">
+      <PatternLayout pattern="${PATTERN}">
+        <Replace regex="${SECRET_REGEX}" replacement="******"/>
+      </PatternLayout>
+    </Console>
+
+    <Loki name="Loki" bufferSizeMegabytes="64">
+      <host>${LOKI_HOST}</host>
+      <port>${LOKI_PORT}</port>
+
+      <ThresholdFilter level="ALL"/>
+      <PatternLayout pattern="${LOKI_PATTERN}">
+        <Replace regex="${SECRET_REGEX}" replacement="******"/>
+      </PatternLayout>
+
+      <Header name="X-Scope-OrgID" value="tenant1"/>
+      <Label name="service" value="${NAME}"/>
+      <Label name="thread" pattern="%t"/>
+      <Label name="class" pattern="%13F:%L"/>
+      <Label name="RequestID" pattern="%X{requestID}"/>
+      <Label name="correlationID" pattern="%X{correlationID}"/>
+      <Label name="clientIP" pattern="%X{clientIP}"/>
+      <Label name="timestamp" pattern="%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX}"/>
+
+      <LogLevelLabel>log_level</LogLevelLabel>
+    </Loki>
+  </Appenders>
+
+  <Loggers>
+    <logger name="org.springframework.boot.context" level="OFF" additivity="false"/>
+    <logger name="org.apache.catalina.core.StandardService" level="OFF" additivity="false"/>
+    <logger name="org.apache.catalina.core.ContainerBase" level="OFF" additivity="false"/>
+    <logger name="org.apache.coyote" level="OFF" additivity="false"/>
+    <logger name="org.springframework.boot.actuate.endpoint" level="OFF" additivity="false"/>
+    <logger name="org.hibernate.validator" level="OFF" additivity="false"/>
+    <logger name="org.springframework.boot.web.servlet.FilterRegistrationBean" level="OFF"
+      additivity="false"/>
+    <logger name="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping" level="OFF"
+      additivity="false"/>
+    <logger name="org.springframework.context.support.DefaultLifecycleProcessor" level="OFF"
+      additivity="false"/>
+
+    <logger name="com.didan.archetype.service.impl" level="${LOG_LEVEL}" additivity="false">
+      <AppenderRef ref="RegexConsole"/>
+    </logger>
+
+    <Root level="${LOG_LEVEL}">
+      <AppenderRef ref="Console"/>
+      <AppenderRef ref="Loki"/>
+    </Root>
+
+  </Loggers>
+</Configuration>
