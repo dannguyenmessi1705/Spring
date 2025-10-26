@@ -2,8 +2,6 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/gRPC/grpc-custom-connect/first/src/main/resources/db/migration/V1__Create_table.sql" dialect="GenericSQL" />
-    <file url="file://$PROJECT_DIR$/gRPC/grpc-custom-connect/first/target/classes/db/migration/V1__Create_table.sql" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/gRPC/grpc-custom-connect/second/src/main/resources/db/migration/V1__Create_table.sql" dialect="GenericSQL" />
-    <file url="file://$PROJECT_DIR$/gRPC/grpc-custom-connect/second/target/classes/db/migration/V1__Create_table.sql" dialect="GenericSQL" />
   </component>
 </project>

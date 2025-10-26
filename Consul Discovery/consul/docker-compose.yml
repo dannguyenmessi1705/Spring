@@ -1,0 +1,17 @@
+services:
+  consult:
+    image: consul:1.15.4
+    container_name: consult_server
+    ports:
+      - "8500:8500" # HTTP service
+      - "8600:8600/udp" # DNS service
+    command: "agent -server -ui -node=consult-server -bootstrap-expect=1 -client=0.0.0.0"
+    environment:
+      CONSUL_BIND_INTERFACE: eth0 # Adjust based on your network interface
+    volumes:
+      - ./consul_data:/consul/data
+    healthcheck:
+      test: ["CMD", "consul", "members"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

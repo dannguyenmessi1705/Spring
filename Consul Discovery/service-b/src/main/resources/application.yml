@@ -1,0 +1,53 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: serviceb
+  cloud:
+    consul:
+      host: localhost # ??a ch? c?a Consul agent (localhost n?u ch?y c?c b?)
+      port: 8500 # C?ng c?a Consul agent
+      enabled: true # Kích ho?t tích h?p v?i Consul
+      discovery:
+        prefer-ip-address: true # ?u tiên s? d?ng ??a ch? IP thay vì hostname
+        register: true # ??ng ký service v?i Consul
+        instance-id: ${spring.application.name}-${server.port}-${random.int[1,99]} # ??nh danh duy nh?t cho instance
+        health-check-path: /actuator/health # ???ng d?n health check
+        service-name: ${spring.application.name} # Tên service khi ??ng ký v?i Consul
+        health-check-interval: 10s # Kho?ng th?i gian gi?a các l?n health check
+        health-check-critical-timeout: 1m # Th?i gian timeout ?? ?ánh d?u service là không kh?e m?nh
+        health-check-timeout: 5s # Th?i gian ch? cho m?i l?n health check
+        hostname: localhost # Tên host ?? ??ng ký v?i Consul
+        tags: # Thêm th? ?? phân lo?i service trong Consul
+          - service-b
+          - api-service-b
+          - version=1.0.0
+        fail-fast: true # N?u không th? k?t n?i v?i Consul, ?ng d?ng s? không kh?i ??ng
+      config:
+        enabled: false
+
+management:
+  health:
+    consult:
+      enabled: true # Kích ho?t health check v?i Consul
+    readinessstate:
+      enabled: true # Kích ho?t readiness state
+    livenessstate:
+      enabled: true # Kích ho?t liveness state
+  endpoints:
+    web:
+      exposure:
+        include: "*" # Cho phép hi?n th? t?t c? các endpoint
+  endpoint:
+    gateway:
+      access: read_only # Cho phép truy c?p endpoint /actuator/gateway
+  info:
+    env:
+      enabled: true # Cho phép dùng endpoint /actuator/info ?? xem thông tin v? service
+
+info: # Thông tin v? service hi?n th? trên Eureka dashboard
+  app:
+    name: "serviceb"
+    description: "Service B"
+    version: "1.0.0"

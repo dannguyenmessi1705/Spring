@@ -1,0 +1,61 @@
+x-default-logging: &logging
+  driver: "json-file"
+  options:
+    max-size: "5m"
+    max-file: "2"
+    tag: "{{.Name}}|{{.ImageName}}|{{.ID}}"
+
+services:
+  quickwit:
+    image: quickwit/quickwit:latest
+    container_name: quickwit
+    ports:
+      - "7280:7280" # Expose QuickWit web interface
+      - "7281:7281" # Expose QuickWit search API port OTLP gRPC
+    environment:
+      QW_ENABLE_OPENTELEMETRY_OTLP_EXPORTER: "true"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://localhost:7281" # Endpoint for OTLP collector
+      QW_ENABLE_OTLP_ENDPOINTS: "true" # Enable OTLP endpoint
+    volumes:
+      - ./qwdata:/quickwit/data # Mount local data directory
+    command: [ "run" ]
+    logging: *logging
+    networks:
+      - log
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib
+    container_name: otel-collector
+    volumes:
+      - ./otel/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+#      - "1888:1888" # pprof extension
+#      - "8888:8888" # Prometheus metrics exposed by the collector
+#      - "8889:8889" # Prometheus exporter metrics
+      - "4317:4317" # OTLP gRPC receiver
+      - "4318:4318" # OTLP HTTP receiver
+#      - "55679:55679" # zPages extension
+    command: [ "--config=/etc/otel-collector-config.yaml" ]
+    logging: *logging
+    depends_on:
+      - quickwit
+    networks:
+      - log
+
+#  logquickwit:
+#    build: .
+#    container_name: logquickwit
+#    ports:
+#      - "8080:8080" # Expose LogQuickwit application port
+#    environment:
+#      SPRING_PROFILES_ACTIVE: "default"
+#      OTEL_EXPORTER_OTLP_ENDPOINT: "http://otel-collector:4317" # Point to OTEL Collector OTLP gRPC receiver
+#    depends_on:
+#      - otel-collector
+#      - quickwit
+#    networks:
+#      - log
+
+networks:
+  log:
+    driver: bridge

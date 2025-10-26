@@ -1,0 +1,50 @@
+receivers:
+  filelog:
+    include:
+      - /var/lib/docker/containers/*/*-json.log
+    operators:
+     - id: parser-docker
+       timestamp:
+         layout: '%Y-%m-%dT%H:%M:%S.%LZ'
+         parse_from: attributes.time
+       type: json_parser
+     - field: attributes.time
+       type: remove
+     - id: extract_metadata_from_docker_tag
+       parse_from: attributes.attrs.tag
+       regex: ^(?P<name>[^\|]+)\|(?P<image_name>[^\|]+)\|(?P<id>[^$]+)$
+       type: regex_parser
+       if: 'attributes?.attrs?.tag != nil'
+     - from: attributes.name
+       to: resource["docker.container.name"]
+       type: move
+       if: 'attributes?.name != nil'
+     - from: attributes.image_name
+       to: resource["docker.image.name"]
+       type: move
+       if: 'attributes?.image_name != nil'
+     - from: attributes.id
+       to: resource["docker.container.id"]
+       type: move
+       if: 'attributes?.id != nil'
+     - from: attributes.log
+       to: body
+       type: move
+
+processors:
+  batch:
+    timeout: 5s
+
+exporters:
+  otlp/qw:
+    endpoint: quickwit:7281
+    compression: none
+    tls:
+      insecure: true
+
+service:
+  pipelines:
+    logs:
+      receivers: [filelog]
+      processors: [batch]
+      exporters: [otlp/qw]
