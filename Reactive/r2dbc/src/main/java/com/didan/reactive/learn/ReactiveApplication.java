@@ -1,9 +1,9 @@
-package com.didan.reactive.r2dbc;
+package com.didan.reactive.learn;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.didan.reactive.${package}")
 public class R2dbcApplication {
 
   public static void main(String[] args) {
