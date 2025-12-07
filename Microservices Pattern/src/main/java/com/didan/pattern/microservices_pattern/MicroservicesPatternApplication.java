@@ -3,7 +3,7 @@ package com.didan.pattern.microservices_pattern;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication(scanBasePackages = "com.didan.pattern.microservices_pattern.orchestrator_sequence")
+@SpringBootApplication(scanBasePackages = "com.didan.pattern.microservices_pattern.splitter")
 public class MicroservicesPatternApplication {
 
 	public static void main(String[] args) {
