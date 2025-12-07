@@ -1,7 +1,7 @@
-package com.didan.pattern.microservices_pattern.retry.controller;
+package com.didan.pattern.microservices_pattern.circuit_breaker.controller;
 
-import com.didan.pattern.microservices_pattern.retry.dto.ProductAggregate;
-import com.didan.pattern.microservices_pattern.retry.service.ProductionAggregatorService;
+import com.didan.pattern.microservices_pattern.circuit_breaker.dto.ProductAggregate;
+import com.didan.pattern.microservices_pattern.circuit_breaker.service.ProductionAggregatorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("retry")
+@RequestMapping("circuit_breaker")
 public class ProductionAggregateController {
 
   private final ProductionAggregatorService productionAggregatorService;

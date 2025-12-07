@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/gateway-aggregator")
+@RequestMapping("timeout")
 public class ProductionAggregateController {
 
   private final ProductionAggregatorService productionAggregatorService;
