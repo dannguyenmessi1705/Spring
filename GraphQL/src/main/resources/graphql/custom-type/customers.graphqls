@@ -1,0 +1,17 @@
+type Query {
+    # use this to fetch customers
+    customers: [Customer]!
+
+    # To fetch specific customer by ID
+    customerById(id: ID!): Customer
+
+    # To fetch customers whose names contain a specific substring
+    customersNameContains(name: String!): [Customer]
+}
+
+type Customer {
+    id: ID
+    name: String
+    age: Int
+    city: String
+}
