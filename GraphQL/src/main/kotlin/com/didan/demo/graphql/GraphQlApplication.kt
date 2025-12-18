@@ -3,7 +3,7 @@ package com.didan.demo.graphql
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
-@SpringBootApplication(scanBasePackages = ["com.didan.demo.graphql.nested_object"])
+@SpringBootApplication(scanBasePackages = ["com.didan.demo.graphql.data_fetching_multiple"])
 class GraphQlApplication
 
 fun main(args: Array<String>) {
