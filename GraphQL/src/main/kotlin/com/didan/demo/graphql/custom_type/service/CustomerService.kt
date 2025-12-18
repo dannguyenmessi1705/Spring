@@ -1,5 +1,6 @@
 package com.didan.demo.graphql.custom_type.service
 
+import com.didan.demo.graphql.custom_type.dto.AgeRangeFilter
 import com.didan.demo.graphql.custom_type.dto.Customer
 import lombok.extern.slf4j.Slf4j
 import org.springframework.stereotype.Service
@@ -28,5 +29,9 @@ class CustomerService {
 
     fun nameContains(name: String): Flux<Customer> {
         return flux.filter { it.name.contains(name) } // Lọc theo tên chứa chuỗi name
+    }
+
+    fun withinAge(filter: AgeRangeFilter): Flux<Customer> {
+        return flux.filter { it.age >= filter.minAge && it.age <= filter.maxAge } // Lọc theo khoảng tuổi
     }
 }

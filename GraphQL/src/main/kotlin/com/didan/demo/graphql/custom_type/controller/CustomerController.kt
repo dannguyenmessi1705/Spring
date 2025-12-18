@@ -1,5 +1,6 @@
 package com.didan.demo.graphql.custom_type.controller
 
+import com.didan.demo.graphql.custom_type.dto.AgeRangeFilter
 import com.didan.demo.graphql.custom_type.dto.Customer
 import com.didan.demo.graphql.custom_type.service.CustomerService
 import org.springframework.graphql.data.method.annotation.Argument
@@ -24,5 +25,10 @@ class CustomerController(private val customerService: CustomerService) {
     @QueryMapping
     fun customersNameContains(@Argument name: String): Flux<Customer> {
         return this.customerService.nameContains(name);
+    }
+
+    @QueryMapping
+    fun customersByAgeRange(@Argument filter: AgeRangeFilter): Flux<Customer> {
+        return this.customerService.withinAge(filter)
     }
 }

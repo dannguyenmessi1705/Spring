@@ -7,6 +7,15 @@ type Query {
 
     # To fetch customers whose names contain a specific substring
     customersNameContains(name: String!): [Customer]
+
+    # To fetch customers within a specific age range
+    customersByAgeRange(filter: AgeRangeFilter!): [Customer]!
+}
+
+# Input type for filtering customers by age range (dto request)
+input AgeRangeFilter {
+    minAge: Int!
+    maxAge: Int!
 }
 
 type Customer {
