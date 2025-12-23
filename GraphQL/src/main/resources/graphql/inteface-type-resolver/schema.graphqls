@@ -1,0 +1,39 @@
+type Query {
+    products: [Product] # Trả về danh sách các sản phẩm (có thể là Fruit, Electronic hoặc Book) mà không cần biết trước loại cụ thể
+}
+
+# Tạo một interface GraphQL và các type triển khai interface đó
+interface Product {
+    id: ID!
+    description: String
+    price: Int
+}
+
+# Triển khai interface Product trong type Fruit (các trường phải khớp với interface + thêm trường riêng)
+type Fruit implements Product {
+    id: ID!
+    description: String
+    price: Int
+    expiryDate: String
+}
+
+# Triển khai interface Product trong type Electronic (các trường phải khớp với interface + thêm trường riêng)
+type Electronics implements Product {
+    id: ID!
+    description: String
+    price: Int
+    brand: Brand
+}
+
+enum Brand {
+    APPLE
+    SAMSUNG
+}
+
+# Triển khai interface Product trong type Book (các trường phải khớp với interface + thêm trường riêng)
+type Book implements Product {
+    id: ID!
+    description: String
+    price: Int
+    author: String
+}
