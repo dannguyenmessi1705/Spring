@@ -3,7 +3,7 @@ package com.didan.demo.graphql
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
-@SpringBootApplication(scanBasePackages = ["com.didan.demo.graphql.cache"])
+@SpringBootApplication(scanBasePackages = ["com.didan.demo.graphql.mutation"])
 class GraphQlApplication
 
 fun main(args: Array<String>) {
